@@ -17,7 +17,7 @@ function split() {
 		line = line.replace(/\s+/g, " "); 
 		var dollarIndex = line.indexOf('$');
 		if (itemCost == null && dollarIndex > -1) {
-			itemAmount = Number(line.substring(0, line.indexOf(" ")));
+			itemAmount = Number(line.substring(0, line.indexOf(' ')));
 			itemCost = Number(line.substring(dollarIndex + 1, line.length));
 		} else {
 			var labelIndex = line.indexOf('Label for:');
