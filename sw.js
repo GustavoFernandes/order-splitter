@@ -8,7 +8,7 @@ self.addEventListener('install', function(event) {
 			console.log('Opened cache');
 			return cache.addAll(urlsToCache);
 		})
-		);
+	);
 });
 
 self.addEventListener('fetch', function(event) {
@@ -21,5 +21,5 @@ self.addEventListener('fetch', function(event) {
 			}
 			return fetch(event.request);
 		})
-		);
+	);
 });
