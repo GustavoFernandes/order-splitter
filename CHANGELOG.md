@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- CHANGELOG file
 - Offline caching
 
 ### Changed
