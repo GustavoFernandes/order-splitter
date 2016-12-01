@@ -1,5 +1,5 @@
-var CACHE_NAME = 'order-splitter-cache-v0.1';
-var urlsToCache = ['/', '/main.js'];
+let CACHE_NAME = 'order-splitter-cache-v0.1';
+let urlsToCache = ['/', '/main.js'];
 
 self.addEventListener('install', function(event) {
 	event.waitUntil(
@@ -10,6 +10,20 @@ self.addEventListener('install', function(event) {
 		})
 	);
 });
+
+self.addEventListener('activate', function(event) {
+	let cacheWhiteList = [CACHE_NAME];
+	event.waitUntil(
+		caches.keys().then(function(keyList) {
+			return Promise.all(keyList.filter(function(key) {
+				return cacheWhiteList.indexOf(key) === -1;
+			}).map(function(key) {
+				return caches.delete(key);
+			})
+		}));
+	)
+});
+
 
 self.addEventListener('fetch', function(event) {
 	event.respondWith(
