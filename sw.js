@@ -15,12 +15,14 @@ self.addEventListener('activate', function(event) {
 	let cacheWhiteList = [CACHE_NAME];
 	event.waitUntil(
 		caches.keys().then(function(keyList) {
-			return Promise.all(keyList.filter(function(key) {
-				return cacheWhiteList.indexOf(key) === -1;
-			}).map(function(key) {
-				return caches.delete(key);
-			})
-		}));
+			return Promise.all(
+				keyList.filter(function(key) {
+					return cacheWhiteList.indexOf(key) === -1;
+				}).map(function(key) {
+					return caches.delete(key);
+				})
+			);
+		})
 	)
 });
 
