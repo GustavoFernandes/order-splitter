@@ -6,7 +6,7 @@
 - Offline caching
 
 ### Changed
-- Improved  whitespace detection
+- Improved whitespace detection
 
 ## 0.1 - 2016-11-19
 ### Added
