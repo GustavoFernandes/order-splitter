@@ -4,6 +4,7 @@
 ### Added
 - CHANGELOG file
 - Offline caching
+- URL query string input
 
 ### Changed
 - Improved whitespace detection
