@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [0.2] - 2016-12-01
 ### Added
 - CHANGELOG file
 - Offline caching
@@ -13,4 +13,4 @@
 ### Added
 - Initial version
 
-[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...HEAD
+[0.2]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...v0.2
