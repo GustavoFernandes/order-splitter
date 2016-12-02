@@ -1,14 +1,17 @@
 window.onload = init;
 
 function init() {
-  // get URL query parameters
+  // check for URL query parameters
+  if (window.location.search) {
+    this.parseQueryStringInput(window.location.search);
+  }
+}
+
+function parseQueryStringInput(queryString) {
   var queryParams = {};
-  
-  var search = window.location.search;
-  if (!search) return;
-  
-  search = search.substring(1); // remove prefixing '?'
-  var searchArray = search.split('&');
+
+  queryString = queryString.substring(1); // remove prefixing '?'
+  var searchArray = queryString.split('&');
   for (var i = 0; i < searchArray.length; i++) {
     var pair = searchArray[i].split('=');
     queryParams[pair[0]] = pair[1];
