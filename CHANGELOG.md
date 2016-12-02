@@ -1,15 +1,15 @@
 # Change Log
 
-## [Unreleased]
+## [0.2] - 2016-12-01
 ### Added
 - CHANGELOG file
 - Offline caching
 
 ### Changed
-- Improved  whitespace detection
+- Improved whitespace detection
 
 ## 0.1 - 2016-11-19
 ### Added
 - Initial version
 
-[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...HEAD
+[0.2]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...v0.2
