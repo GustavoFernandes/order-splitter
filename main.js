@@ -25,42 +25,51 @@ function init() {
   // TODO
 }
 
+// TODO: check if the number at the beginning of the line affects the item cost
+// example: 2 Chicken $4.00
+//   should the cost for the person be $4 or $8?
+function parseOrderUpInput(text) {
+  var LABEL = 'Label for:';
+
+  var map = {};
+  var itemCost = null;
+  var array = input.split('\n');
+  
+  for (var i = 0; i < array.length; i++) {
+    var line = array[i].trim();
+    line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
+    
+    if (!itemCost) {
+      var dollarIndex = line.indexOf('$');
+      if (dollarIndex > -1) {
+        itemCost = Number(line.substring(dollarIndex + 1, line.length));
+      }
+      continue;
+    }
+    
+    var labelIndex = line.indexOf(LABEL);
+    if (labelIndex > -1) {
+      var person = line.substring(labelIndex + LABEL.length, line.length);
+      
+      if (map[person] == null) {
+        map[person] = 0;
+      }
+      
+      map[person] += itemCost;
+      itemCost = null;
+    }
+  }
+  
+  return map;
+}
+
 function split() {
 	var input = document.getElementById('textarea').value;
 	var taxes = Number(document.getElementById('taxes').value);
 	var fees = Number(document.getElementById('fees').value);
 	var tipPercent = Number(document.getElementById('tip').value);
-
-	var map = {};
-	var arr = input.split('\n');
-
-	var itemCost = null;
-	var itemAmount = null;
-	var subtotal = 0;
-
-	for (var i = 0; i < arr.length; i++) {
-		var line = arr[i].trim();
-
-		line = line.replace(/\s+/g, " "); 
-		var dollarIndex = line.indexOf('$');
-		if (itemCost == null && dollarIndex > -1) {
-			itemAmount = Number(line.substring(0, line.indexOf(' ')));
-			itemCost = Number(line.substring(dollarIndex + 1, line.length));
-		} else {
-			var labelIndex = line.indexOf('Label for:');
-			if (labelIndex > -1) {
-				var person = line.substring(labelIndex + 'Label for:'.length, line.length);
-
-				if (map[person] == null) {
-					map[person] = 0;
-				}
-
-				subtotal += itemAmount * itemCost;
-				map[person] += itemAmount * itemCost;
-				itemCost = null;
-			}
-		}
-	}
+	
+	// TODO this.parseOrderUpInput(input);
 
 	var taxPercent = taxes / subtotal;
 	var feesPerPerson = fees / Object.keys(map).length;
