@@ -1,3 +1,30 @@
+window.onload = init;
+
+function init() {
+  // get URL query parameters
+  var queryParams = {};
+  
+  var search = window.location.search;
+  if (!search) return;
+  
+  search = search.substring(1); // remove prefixing '?'
+  var searchArray = search.split('&');
+  for (var i = 0; i < searchArray.length; i++) {
+    var pair = searchArray[i].split('=');
+    queryParams[pair[0]] = pair[1];
+  }
+  
+  if (!queryParams.hasOwnProperty('tax') ||
+      !queryParams.hasOwnProperty('fee') ||
+      !queryParams.hasOwnProperty('tip')) {
+    console.error('Found URL query string but not all required fields are present (tax, tip, and fee)');
+    // example index.html?tax=0.30&fee=1.50&tip=15&gus=5.00
+    return;
+  }
+  
+  // TODO
+}
+
 function split() {
 	var input = document.getElementById('textarea').value;
 	var taxes = Number(document.getElementById('taxes').value);
