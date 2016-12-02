@@ -66,12 +66,15 @@ function parseOrderUpInput(text) {
   return map;
 }
 
+function onSplitButtonClick() {
+  var text = document.getElementById('textarea').value;
+  var taxes = Number(document.getElementById('taxes').value);
+  var fees = Number(document.getElementById('fees').value);
+  var tipPercent = Number(document.getElementById('tip').value);
+}
+
 function split() {
-	var input = document.getElementById('textarea').value;
-	var taxes = Number(document.getElementById('taxes').value);
-	var fees = Number(document.getElementById('fees').value);
-	var tipPercent = Number(document.getElementById('tip').value);
-	
+
 	// TODO this.parseOrderUpInput(input);
 
 	var taxPercent = taxes / subtotal;
