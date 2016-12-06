@@ -1,8 +1,8 @@
 function split() {
 	var input = document.getElementById('textarea').value;
-	var taxes = Number(document.getElementById('taxes').value);
-	var fees = Number(document.getElementById('fees').value);
-	var tipPercent = Number(document.getElementById('tip').value);
+	var fees = document.getElementById('fees').value;
+	var taxes = document.getElementById('taxes').value;
+	var tipPercent = document.getElementById('tip').value;
 
 	var map = {};
 	var arr = input.split('\n');
@@ -13,8 +13,8 @@ function split() {
 
 	for (var i = 0; i < arr.length; i++) {
 		var line = arr[i].trim();
+		line = line.replace(/\s+/g, ' ');
 
-		line = line.replace(/\s+/g, " "); 
 		var dollarIndex = line.indexOf('$');
 		if (itemCost == null && dollarIndex > -1) {
 			itemAmount = Number(line.substring(0, line.indexOf(' ')));

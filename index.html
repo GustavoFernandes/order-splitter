@@ -4,6 +4,17 @@
 		<meta charset="UTF-8">
 		<script src="main.js"></script>
 		<script src="install.js"></script>
+		<link rel="import" href="elements/number-input.html">
+		<style>
+			number-input {
+				padding: 0.5rem;
+				display: block;
+			}
+			#tip {
+				display: inline;
+				padding-right: 0rem;
+			}
+		</style>
 	</head>
 	<body>
 		<div align="right">v0.2</div>
@@ -20,10 +31,10 @@
 1 	12 Nuggets - 	$4.39
 	Sauce: Ketchup
 	Label for:Alice
-	
+
 2 	Tots - 	$1.99
 	Label for:Bob
-	
+
 1 	6 Wings - 	$6.29
 	Wing Seasoning: Sweet Honey BBQ
 	Label for:Charlie
@@ -31,9 +42,10 @@
 				</td>
 			</tr>
 		</table>
-		Taxes: $<input id="taxes" type="text"><br>
-		Fees: $<input id="fees" type="text"><br>
-		Tip percentage: <input id="tip" type="text">%<br>
+		<!-- gusbus -->
+		<number-input id="taxes">Taxes: $</number-input>
+		<number-input id="fees">Fees: $</number-input>
+		<number-input id="tip">Tip percentage: </number-input>%<br>
 		<button onclick="split()">Split</button>
 		<p id="result">
 	</body>

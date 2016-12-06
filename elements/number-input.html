@@ -1,0 +1,42 @@
+<template id="number-input">
+<slot></slot>
+<input id="input" type="number"/>
+</template>
+<script>
+	class NumberInput extends HTMLElement {
+		constructor() {
+			super();
+			let shadowRoot = this.attachShadow({mode: 'open'});
+			const t = document.currentScript.ownerDocument.querySelector("#number-input");
+			const instance = t.content.cloneNode(true);
+			shadowRoot.appendChild(instance);
+			this.input = shadowRoot.querySelector("#input");
+			this.input.addEventListener("input", e => {
+				this.value = this.input.value;
+			});
+		}
+
+		static get observedAttributes() {
+			return ["value"];
+		}
+
+		attributeChangedCallback(name, oldValue, newValue) {
+			let val = Number(newValue);
+			if(isNaN(val)) {
+				return;
+			}
+			if(name == "value") {
+				this.value = val; 
+			} 
+		}
+
+		get value() {
+			return Number(this.getAttribute("value"));
+		}
+
+		set value(val) {
+			this.setAttribute("value", val);
+		}
+	}
+	customElements.define('number-input', NumberInput);
+</script>
