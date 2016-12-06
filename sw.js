@@ -1,5 +1,5 @@
 let CACHE_NAME = 'order-splitter-cache-v0.2';
-let urlsToCache = ['/', '/main.js'];
+let urlsToCache = ['/', '/main.js', '/parser.js'];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
