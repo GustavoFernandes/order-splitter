@@ -1,6 +1,7 @@
 # Change Log
 
 ## [Unreleased]
+- Bug fixes to service worker
 
 ## [0.3] - 2016-12-05
 - Bug fixes to offline caching
