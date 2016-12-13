@@ -2,6 +2,13 @@ var OVERHEADS = ['tip', 'tax', 'fee'];
 
 window.onload = init;
 
+let web_socket = new WebSocket("wss://morning-spire-54006.herokuapp.com/");
+
+web_socket.onmessage = function(e) {
+   split(JSON.parse(e.data));
+}
+
+
 function init() {
   // check for URL query parameters
   if (window.location.search) {
@@ -101,6 +108,7 @@ function onSplitButtonClick() {
   input.tipPercent = Number(document.getElementById('tip').value) / 100;
 
   this.split(input);
+  web_socket.send(JSON.stringify(input));
 }
 
 function split(input) {
