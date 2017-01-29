@@ -187,13 +187,30 @@ function pad(n) {
   return s;
 }
 
+/**
+ * Returns a listing of names to split costs
+ */
 function makeTable(object) {
-  var table = '<table>';
-  for (var x in object) {
-    table += '<tr><td>' + x + '</td><td>$' + this.prettifyNumber(object[x]) + '</td></tr>';
+  // get length of longest name
+  var longestName = -1;
+  for (var p in object) {
+    longestName = Math.max(p.length, longestName);
   }
-  table += '</table>';
-  return table;
+
+  // add 1 to longest name for a space after name
+  longestName += 1;
+
+  var output = '';
+  var name;
+  for (p in object) {
+    name = p;
+    for (var i = p.length; i < longestName; i++) {
+      name += ' ';
+    }
+    output += name + '$' + this.prettifyNumber(object[p]) + '<br>';
+  }
+
+  return output;
 }
 
 /**
