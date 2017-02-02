@@ -1,51 +1,12 @@
-var OVERHEADS = ['tip', 'tax', 'fee'];
-
 window.onload = init;
 
 function init() {
   // check for URL query parameters
   if (window.location.search) {
-    try {
-      var input = this.parseQueryStringInput(window.location.search);
-      this.split(input);
-    } catch (err) {
-      console.error(err);
-    }
+    var queryString = window.location.search.substring(1); // remove prefixing '?'
+    var order = parseQueryStringInput(queryString);
+    split(order);
   }
-}
-
-/**
- * Parses a URL query string.
- *
- * Below is an example of input:
- * ?tax=0.30&fee=1.50&tip=15&Gus=5.00
- */
-function parseQueryStringInput(input) {
-  var map = {
-    persons: {}
-  };
-
-  input = input.substring(1); // remove prefixing '?'
-  var searchArray = input.split('&');
-  for (var i = 0; i < searchArray.length; i++) {
-    var pair = searchArray[i].split('=');
-    if (OVERHEADS.indexOf(pair[0]) > -1) {
-      map[pair[0]] = Number(pair[1]);
-    } else {
-      map.persons[pair[0]] = Number(pair[1]);
-    }
-  }
-
-  if (!map.hasOwnProperty('tax') ||
-      !map.hasOwnProperty('fee') ||
-      !map.hasOwnProperty('tip')) {
-    throw 'Found URL query string but not all required fields are present (tax, tip, and fee)';
-  }
-
-  map.tipPercent = map.tip / 100;
-  delete map.tip;
-
-  return map;
 }
 
 /**
