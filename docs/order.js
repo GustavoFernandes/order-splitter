@@ -1,10 +1,24 @@
 function Order () {
-  var fee = 0;
-  var tax = 0;
-  var tip = 0;
-  var tipPercent = 0;
   var subtotal = 0;
   var costs = {};
+
+  function setDefaults () {
+    if (!fee) {
+      console.warn('Fee unset; defaulting to 0');
+      fee = 0;
+    }
+
+    if (!tax) {
+      console.warn('Tax unset; defaulting to 0');
+      tax = 0;
+    }
+
+    if (!tip && !tipPercent) {
+      console.warn('Tip unset; defaulting to 0');
+      tip = 0;
+      tipPercent = 0;
+    }
+  }
 
   return {
     addItem: function (name, cost) {
@@ -30,6 +44,24 @@ function Order () {
 
     set tipPercent (x) {
       tipPercent = x;
+    },
+
+    split: function () {
+      setDefaults();
+
+      taxPercent = tax / subtotal;
+      feesPerPerson = fee / Object.keys(costs).length;
+      tip = tipPercent * subtotal;
+      total = subtotal + tax + fee + tip;
+
+      totals = {};
+      for (var person in costs) {
+        totals[person] =
+            costs[person] + // cost of items
+            costs[person] * taxPercent + // tax on items
+            costs[person] * tipPercent + // tip on items
+            feesPerPerson;
+      }
     }
   }
 }

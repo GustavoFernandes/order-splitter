@@ -19,35 +19,6 @@ function onSplitButtonClick() {
   this.split(input);
 }
 
-function split(input) {
-  var subtotal = 0;
-  for (var person in input.persons) {
-    subtotal += input.persons[person];
-  }
-
-  var taxPercent = input.tax / subtotal;
-  var feesPerPerson = input.fee / Object.keys(input.persons).length;
-  var tip = input.tipPercent * subtotal;
-  var total = subtotal + input.tax + input.fee + tip;
-
-  var costs = {};
-  for (person in input.persons) {
-    costs[person] = input.persons[person] /* item cost */ +
-        input.persons[person] * taxPercent + /* tax on items */ +
-        input.persons[person] * input.tipPercent /* tip on items */ +
-        feesPerPerson;
-  }
-
-  input.subtotal = subtotal;
-  input.taxPercent = taxPercent;
-  input.feesPerPerson = feesPerPerson;
-  input.tip = tip;
-  input.total = total;
-  input.costs = costs;
-
-  this.display(input);
-}
-
 function display(input) {
 
   var calculationsTable = '<table>' +
