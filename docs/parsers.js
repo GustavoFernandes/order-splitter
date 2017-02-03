@@ -18,7 +18,7 @@ function parseQueryStringInput (queryString) {
     pairValues[1] = Number(pairValues[1]);
 
     if (pairValues[0] === 'tip') {
-      order.tipPercent = pairValues[1] / 100;
+      order.tipPercent = pairValues[1];
     } else if (overheads.indexOf(pairValues[0]) > -1) {
       order[pairValues[0]] = pairValues[1];
     } else {

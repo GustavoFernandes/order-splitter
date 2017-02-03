@@ -14,7 +14,7 @@ function onSplitButtonClick() {
   var order = parseOrderUpInput(text);
   order.tax = Number(document.getElementById('taxes').value);
   order.fee = Number(document.getElementById('fees').value);
-  order.tipPercent = Number(document.getElementById('tip').value) / 100;
+  order.tipPercent = Number(document.getElementById('tip').value);
 
   this.split(input);
 }
