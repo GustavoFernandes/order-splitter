@@ -4,8 +4,9 @@ function init() {
   // check for URL query parameters
   if (window.location.search) {
     var queryString = window.location.search.substring(1); // remove prefixing '?'
-    var order = parseQueryStringInput(queryString);
-    split(order);
+    handleOrder(function () {
+      return parseQueryStringInput(queryString);
+    });
   }
 }
 
@@ -15,9 +16,15 @@ function onSplitButtonClick() {
   var fee = Number(document.getElementById('fees').value);
   var tipPercent = Number(document.getElementById('tip').value);
 
-  var order = parseOrderUpInput(text, fee, tax, tipPercent);
+  handleOrder(function () {
+    return parseOrderUpInput(text, fee, tax, tipPercent);
+  });
+}
 
-  this.split(input);
+function handleOrder (parserFunction) {
+  var order = parserFunction();
+  order.split();
+  display(order);
 }
 
 function display(input) {
