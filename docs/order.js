@@ -1,4 +1,4 @@
-function Order () {
+function Order (fee, tax, tipPercent) {
   var subtotal = 0;
   var costs = {};
 

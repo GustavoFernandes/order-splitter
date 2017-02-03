@@ -34,12 +34,12 @@ function parseQueryStringInput (queryString) {
  * @param {string} orderUpText - The confirmation summary from OrderUp.com
  * @return {Order} An order parsed from the OrderUp.com confirmation summary
  */
-function parseOrderUpInput (orderUpText) {
+function parseOrderUpInput (orderUpText, fee, tax, tipPercent) {
   // TODO: check if the number at the beginning of the line affects the item cost
   // example: 2 Chicken $4.00
   //   should the cost for the person be $4 or $8?
 
-  var order = Order();
+  var order = Order(fee, tax, tipPercent);
   var label = 'Label for:';
   var itemCost = null;
   var array = orderUpText.split('\n');

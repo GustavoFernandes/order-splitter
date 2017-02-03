@@ -11,10 +11,11 @@ function init() {
 
 function onSplitButtonClick() {
   var text = document.getElementById('textarea').value;
-  var order = parseOrderUpInput(text);
-  order.tax = Number(document.getElementById('taxes').value);
-  order.fee = Number(document.getElementById('fees').value);
-  order.tipPercent = Number(document.getElementById('tip').value);
+  var tax = Number(document.getElementById('taxes').value);
+  var fee = Number(document.getElementById('fees').value);
+  var tipPercent = Number(document.getElementById('tip').value);
+
+  var order = parseOrderUpInput(text, fee, tax, tipPercent);
 
   this.split(input);
 }
