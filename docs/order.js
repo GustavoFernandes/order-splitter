@@ -13,9 +13,8 @@ function Order () {
       tax = 0;
     }
 
-    if (!tip && !tipPercent) {
+    if (!tipPercent) {
       console.warn('Tip unset; defaulting to 0');
-      tip = 0;
       tipPercent = 0;
     }
   }
@@ -36,10 +35,6 @@ function Order () {
 
     set tax (x) {
       tax = x;
-    },
-
-    set tip (x) {
-      tip = x;
     },
 
     set tipPercent (x) {
