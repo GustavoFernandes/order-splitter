@@ -9,57 +9,12 @@ function init() {
   }
 }
 
-/**
- * Parses the confirmation summary from an OrderUp.com order
- */
-function parseOrderUpInput(text) {
-  // TODO: check if the number at the beginning of the line affects the item cost
-  // example: 2 Chicken $4.00
-  //   should the cost for the person be $4 or $8?
-
-  var LABEL = 'Label for:';
-
-  var map = {
-    persons: {}
-  };
-  var itemCost = null;
-  var array = text.split('\n');
-
-  for (var i = 0; i < array.length; i++) {
-    var line = array[i].trim();
-    line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
-
-    if (!itemCost) {
-      var dollarIndex = line.indexOf('$');
-      if (dollarIndex > -1) {
-        itemCost = Number(line.substring(dollarIndex + 1, line.length));
-      }
-      continue;
-    }
-
-    var labelIndex = line.indexOf(LABEL);
-    if (labelIndex > -1) {
-      var person = line.substring(labelIndex + LABEL.length, line.length);
-
-      if (map.persons[person] == null) {
-        map.persons[person] = 0;
-      }
-
-      map.persons[person] += itemCost;
-      itemCost = null;
-    }
-  }
-
-  return map;
-}
-
 function onSplitButtonClick() {
   var text = document.getElementById('textarea').value;
-
-  var input = this.parseOrderUpInput(text);
-  input.tax = Number(document.getElementById('taxes').value);
-  input.fee = Number(document.getElementById('fees').value);
-  input.tipPercent = Number(document.getElementById('tip').value) / 100;
+  var order = parseOrderUpInput(text);
+  order.tax = Number(document.getElementById('taxes').value);
+  order.fee = Number(document.getElementById('fees').value);
+  order.tipPercent = Number(document.getElementById('tip').value) / 100;
 
   this.split(input);
 }
