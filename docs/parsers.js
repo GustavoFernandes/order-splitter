@@ -1,5 +1,5 @@
 /**
- * Parsers input from a URL query string into an Order.
+ * Parses input from a URL query string into an Order.
  * @example
  * // where tip is a percentage
  * parseQueryStringInput('tax=0.30&fee=1.50&tip=15&Gus=5.00');
@@ -38,7 +38,7 @@ function parseOrderUpInput (orderUpText) {
   // TODO: check if the number at the beginning of the line affects the item cost
   // example: 2 Chicken $4.00
   //   should the cost for the person be $4 or $8?
-  
+
   var order = Order();
   var label = 'Label for:';
   var itemCost = null;
