@@ -21,12 +21,13 @@ function init() {
  * ?tax=0.30&fee=1.50&tip=15&Gus=5.00
  */
 function parseQueryStringInput(input) {
+  var decodedInput = decodeURI(input);
   var map = {
     persons: {}
   };
 
-  input = input.substring(1); // remove prefixing '?'
-  var searchArray = input.split('&');
+  decodedInput = decodedInput.substring(1); // remove prefixing '?'
+  var searchArray = decodedInput.split('&');
   for (var i = 0; i < searchArray.length; i++) {
     var pair = searchArray[i].split('=');
     if (OVERHEADS.indexOf(pair[0]) > -1) {
@@ -215,7 +216,7 @@ function makeHyperlink(tax, fee, tipPercent, personItemCosts) {
   for (var p in personItemCosts) {
     link += '&' + p + '=' + personItemCosts[p];
   }
-
+  link = encodeURI(link);
   return '<a href=' + link + '>' + link + '</a>';
 }
 
