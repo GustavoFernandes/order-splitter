@@ -1,4 +1,4 @@
-var src = ['src/**'];
+var src = ['src/**', 'sw/**'];
 var deployDir = 'docs';
 
 var gulp = require('gulp');
