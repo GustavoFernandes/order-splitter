@@ -2,8 +2,14 @@ var src = ['src/**'];
 var deployDir = 'docs';
 
 var gulp = require('gulp');
+var clean = require('gulp-clean');
 
-gulp.task('copy', function() {
+gulp.task('clean', function() {
+    return gulp.src(deployDir)
+        .pipe(clean());
+});
+
+gulp.task('copy', ['clean'], function() {
     return gulp.src(src)
         .pipe(gulp.dest(deployDir));
 });

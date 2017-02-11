@@ -4,7 +4,8 @@
   "description": "OrderUp order splitter",
   "main": "src/main.js",
   "dependencies": {
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2"
   },
   "devDependencies": {},
   "repository": {
