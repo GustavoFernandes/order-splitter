@@ -15,3 +15,14 @@ gulp.task('clean', function() {
     return gulp.src(deployDir)
         .pipe(clean());
 });
+
+gulp.task('serve', function() {
+    var browserSync = require('browser-sync');
+    browserSync({
+        server: {
+            baseDir: "./src/"
+        },
+        notify: false
+    });
+    gulp.watch(["./src/*"], browserSync.reload);
+});
