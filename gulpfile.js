@@ -3,10 +3,11 @@ var deployDir = 'docs';
 
 var gulp = require('gulp');
 var clean = require('gulp-clean');
+var jshint = require('gulp-jshint');
 
 gulp.task('default', ['copy']);
 
-gulp.task('copy', ['clean'], function() {
+gulp.task('copy', ['clean', 'js-lint'], function() {
     return gulp.src(src)
         .pipe(gulp.dest(deployDir));
 });
@@ -14,6 +15,18 @@ gulp.task('copy', ['clean'], function() {
 gulp.task('clean', function() {
     return gulp.src(deployDir)
         .pipe(clean());
+});
+
+gulp.task('js-lint', function() {
+    return gulp.src(src.map(function(path) {
+        return path+'/*.js';
+    }))
+        .pipe(jshint({
+            eqeqeq: true,
+            esversion: 6
+        }))
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(jshint.reporter('fail'));
 });
 
 gulp.task('serve', function() {
