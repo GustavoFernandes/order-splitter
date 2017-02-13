@@ -36,7 +36,7 @@ function parseQueryStringInput(input) {
       map.persons[pair[0]] = Number(pair[1]);
     }
   }
-  
+
   if (!map.hasOwnProperty('tax') ||
       !map.hasOwnProperty('fee') ||
       !map.hasOwnProperty('tip')) {
@@ -64,11 +64,11 @@ function parseOrderUpInput(text) {
   };
   var itemCost = null;
   var array = text.split('\n');
-  
+
   for (var i = 0; i < array.length; i++) {
     var line = array[i].trim();
     line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
-    
+
     if (!itemCost) {
       var dollarIndex = line.indexOf('$');
       if (dollarIndex > -1) {
@@ -76,20 +76,20 @@ function parseOrderUpInput(text) {
       }
       continue;
     }
-    
+
     var labelIndex = line.indexOf(LABEL);
     if (labelIndex > -1) {
       var person = line.substring(labelIndex + LABEL.length, line.length);
-      
+
       if (!map.persons[person]) {
         map.persons[person] = 0;
       }
-      
+
       map.persons[person] += itemCost;
       itemCost = null;
     }
   }
-  
+
   return map;
 }
 
