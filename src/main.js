@@ -1,3 +1,4 @@
+/*jshint esversion: 6*/
 var OVERHEADS = ['tip', 'tax', 'fee'];
 
 window.onload = init;
@@ -188,11 +189,24 @@ function pad(n) {
 }
 
 function makeTable(object) {
-  var table = '<table>';
-  for (var x in object) {
-    table += '<tr><td>' + x + '</td><td>$' + this.prettifyNumber(object[x]) + '</td></tr>';
-  }
-  table += '</table>';
+  var names = Object.keys(object);
+  var costs = names.map(name => { return object[name];});
+
+  var maxNameLength = names.reduce((maxNameLength, name) => {
+    return Math.max(maxNameLength, name.length);
+  }, 0);
+
+  names = names.map(name => {
+    return name + Array(maxNameLength+2 - name.length).join(" ");
+  });
+
+  zip = rows=>rows[0].map((_,c)=>rows.map(row=>row[c])); // http://stackoverflow.com/questions/4856717/javascript-equivalent-of-pythons-zip-function
+
+  var rows = zip([names,costs]).map(row => { return row[0]+row[1]; });
+
+  var table = '<pre>';
+  table += rows.join("\n");
+  table += '</pre>';
   return table;
 }
 
