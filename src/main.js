@@ -81,7 +81,7 @@ function parseOrderUpInput(text) {
     if (labelIndex > -1) {
       var person = line.substring(labelIndex + LABEL.length, line.length);
       
-      if (map.persons[person] == null) {
+      if (!map.persons[person]) {
         map.persons[person] = 0;
       }
       
@@ -118,7 +118,7 @@ function split(input) {
   var costs = {};
   for (person in input.persons) {
     costs[person] = input.persons[person] /* item cost */ +
-        input.persons[person] * taxPercent + /* tax on items */ +
+        input.persons[person] * taxPercent /*+ tax on items */ +
         input.persons[person] * input.tipPercent /* tip on items */ +
         feesPerPerson;
   }
