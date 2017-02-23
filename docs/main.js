@@ -53,22 +53,15 @@ function display(input) {
 
 /**
  * Returns a string of a number in the format "#.##"
+ * @example
+ * prettifyNumber(12); // returns "12.00"
+ * @param {number} n - The number to prettify
+ * @returns {string} A string of a number rounded and padded to 2 decimal places
  */
-function prettifyNumber(n) {
-  return pad(round(n));
-}
+function prettifyNumber (n) {
+  n = Math.round(n * 100) / 100; // round to 2 decimal places
 
-/**
- * Returns a number rounded to 2 decimals.
- */
-function round(n) {
-  return Math.round(n * 100) / 100;
-}
-
-/**
- * Returns a string of a number padded to 2 decimal places
- */
-function pad(n) {
+  // pad to 2 decimal places if necessary
   var s = n.toString();
 
   if (s.indexOf('.') == -1) {
