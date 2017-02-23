@@ -1,6 +1,6 @@
 window.onload = init;
 
-function init() {
+function init () {
   // check for URL query parameters
   if (window.location.search) {
     var queryString = window.location.search.substring(1); // remove prefixing '?'
@@ -10,7 +10,7 @@ function init() {
   }
 }
 
-function onSplitButtonClick() {
+function onSplitButtonClick () {
   var text = document.getElementById('textarea').value;
   var tax = Number(document.getElementById('taxes').value);
   var fee = Number(document.getElementById('fees').value);
@@ -27,26 +27,26 @@ function handleOrder (parserFunction) {
   display(order);
 }
 
-function display(input) {
+function display (order) {
 
   var calculationsTable = '<table>' +
-      '<tr><td>Subtotal:</td><td>$' + this.prettifyNumber(input.subtotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
-      '<tr><td>Tax:</td><td>$' + this.prettifyNumber(input.tax) + '</td><td>(user input)</td></tr>' +
-      '<tr><td>Fees:</td><td>$' + this.prettifyNumber(input.fee) + '</td><td>(user input)</td></tr>' +
-      '<tr><td>Tip:</td><td>$' + this.prettifyNumber(input.tip) + '</td><td>(tip percent * subtotal)</td></tr>' +
-      '<tr><td>Total:</td><td>$' + this.prettifyNumber(input.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
-      '<tr><td>Fees per Person:</td><td>$' + this.prettifyNumber(input.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
-      '<tr><td>Tax (Percent):</td><td>' + input.taxPercent * 100 + '%</td><td>(tax / subtotal)</td></tr>' +
-      '<tr><td>Tip (Percent):</td><td>' + input.tipPercent * 100 + '%</td><td>(user input)</td></tr>' +
+      '<tr><td>Subtotal:</td><td>$' + prettifyNumber(order.subtotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
+      '<tr><td>Tax:</td><td>$' + prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
+      '<tr><td>Fees:</td><td>$' + prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
+      '<tr><td>Tip:</td><td>$' + prettifyNumber(order.tip) + '</td><td>(tip percent * subtotal)</td></tr>' +
+      '<tr><td>Total:</td><td>$' + prettifyNumber(order.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
+      '<tr><td>Fees per Person:</td><td>$' + prettifyNumber(order.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
+      '<tr><td>Tax (Percent):</td><td>' + order.taxPercent + '%</td><td>(tax / subtotal)</td></tr>' +
+      '<tr><td>Tip (Percent):</td><td>' + order.tipPercent + '%</td><td>(user input)</td></tr>' +
       '</table>';
 
   var html =
       '<hr>' +
       calculationsTable + '<br>' +
-      this.makeBreakdown(input) + '<br>' +
+      makeBreakdownDisplay(order) + '<br>' +
       'Publish the following:<br>' +
-      '<pre>' + this.makeTable(input.costs) + '</pre>' +
-      this.makeHyperlink(input.tax, input.fee, input.tipPercent, input.persons);
+      '<pre>' + makeTotalsDisplay(order.totals) + '</pre>' +
+      makeHyperlink(order.tax, order.fee, order.tipPercent, order.costs);
 
   document.getElementById('result').innerHTML = html;
 }
@@ -77,11 +77,13 @@ function prettifyNumber (n) {
 
 /**
  * Returns a listing of names to split costs
+ * @param {object} totals - The totals property from the Order
+ * @returns {string} A view mapping names to split costs
  */
-function makeTable(object) {
+function makeTotalsDisplay (totals) {
   // get length of longest name
   var longestName = -1;
-  for (var p in object) {
+  for (var p in totals) {
     longestName = Math.max(p.length, longestName);
   }
 
@@ -90,12 +92,12 @@ function makeTable(object) {
 
   var output = '';
   var name;
-  for (p in object) {
+  for (p in totals) {
     name = p;
     for (var i = p.length; i < longestName; i++) {
       name += ' ';
     }
-    output += name + '$' + this.prettifyNumber(object[p]) + '<br>';
+    output += name + '$' + prettifyNumber(totals[p]) + '<br>';
   }
 
   return output;
@@ -107,15 +109,15 @@ function makeTable(object) {
  * @param {fee} fee - amount of fees
  * @param {number} tipPercent - tip as a percentage
  * @param {Object} personItemCosts - map of person name to item costs
- * @return {string} the hyperlink to this order
+ * @return {string} The hyperlink to this order
  */
-function makeHyperlink(tax, fee, tipPercent, personItemCosts) {
+function makeHyperlink (tax, fee, tipPercent, personItemCosts) {
   var link = window.location.origin + window.location.pathname;
   if (link.indexOf('index.html') == -1) {
     link += 'index.html';
   }
 
-  link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tipPercent * 100;
+  link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tipPercent;
 
   for (var p in personItemCosts) {
     link += '&' + p + '=' + personItemCosts[p];
@@ -124,16 +126,21 @@ function makeHyperlink(tax, fee, tipPercent, personItemCosts) {
   return '<a href=' + link + '>' + link + '</a>';
 }
 
-function makeBreakdown(input) {
+/**
+ * Returns a display breaking down the Order split calculations
+ * @param {Order} order - the Order to breakdown
+ * @returns {string} A view of the Order breakdown
+ */
+function makeBreakdownDisplay (order) {
   var breakdown = '<table id="breakdown">';
   breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
-  for (var person in input.persons) {
+  for (var person in order.costs) {
     breakdown += '<tr><td>' + person + '</td><td>' +
-        input.persons[person] + '</td><td> + ' + // item costs
-        input.persons[person] + ' * ' + input.taxPercent + '</td><td> + ' + // taxes
-        input.persons[person] + ' * ' + input.tipPercent + '</td><td> + ' + // tip
-        input.feesPerPerson + '</td><td> = ' +
-        input.costs[person] + '</td></tr>';
+        order.costs[person] + '</td><td> + ' + // item costs
+        order.costs[person] + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
+        order.costs[person] + ' * ' + order.tipPercent + '</td><td> + ' + // tip
+        order.feesPerPerson + '</td><td> = ' +
+        order.costs[person] + '</td></tr>';
   }
 
   breakdown += '</table>';

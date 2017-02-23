@@ -7,7 +7,7 @@
  * @returns {Order} An order parsed from the URL query string
  */
 function parseQueryStringInput (queryString) {
-  var overheads = ['fee', 'tax']; // tip is a special case, maps to tipPercent
+  var overheads = ['fee', 'tax']; // tip is a special case, it maps to tipPercent
 
   var pairs = queryString.split('&');
   var order = Order();

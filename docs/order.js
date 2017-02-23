@@ -19,7 +19,7 @@ function Order (fee, tax, tipPercent) {
     }
   }
 
-  return {
+  var order = {
     addItem: function (name, cost) {
       if (costs[name] == null) {
         costs[name] = 0;
@@ -38,7 +38,7 @@ function Order (fee, tax, tipPercent) {
     },
 
     set tipPercent (x) {
-      tipPercent = x;
+      tipPercent = x / 100;
     },
 
     split: function () {
@@ -57,6 +57,52 @@ function Order (fee, tax, tipPercent) {
             costs[person] * tipPercent + // tip on items
             feesPerPerson;
       }
+    },
+
+    get costs () {
+      return costs;
+    },
+
+    get fee () {
+      return fee;
+    },
+
+    get feesPerPerson () {
+      return feesPerPerson;
+    },
+
+    get tax () {
+      return tax;
+    },
+
+    get taxPercent () {
+      return taxPercent * 100;
+    },
+
+    get tip () {
+      return tip;
+    },
+
+    get tipPercent () {
+      return tipPercent * 100;
+    },
+
+    get total () {
+      return total;
+    },
+
+    get subtotal () {
+      return subtotal;
+    },
+
+    get totals () {
+      return totals;
     }
   }
+
+  order.fee = fee;
+  order.tax = tax;
+  order.tipPercent = tipPercent;
+
+  return order;
 }
