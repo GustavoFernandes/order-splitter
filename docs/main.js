@@ -121,7 +121,7 @@ function makeHyperlink (tax, fee, tipPercent, personItemCosts) {
   link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tipPercent;
 
   for (var p in personItemCosts) {
-    link += '&' + p + '=' + personItemCosts[p];
+    link += '&' + p + '=' + prettifyNumber(personItemCosts[p]);
   }
 
   link = encodeURI(link);
@@ -138,12 +138,13 @@ function makeBreakdownDisplay (order) {
   var breakdown = '<table id="breakdown">';
   breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
   for (var person in order.costs) {
+    var personItemCosts = prettifyNumber(order.costs[person]);
     breakdown += '<tr><td>' + person + '</td><td>' +
-        order.costs[person] + '</td><td> + ' + // item costs
-        order.costs[person] + ' * ' + order.taxPercent / 100 + '</td><td> + ' + // taxes
-        order.costs[person] + ' * ' + order.tipPercent / 100 + '</td><td> + ' + // tip
+        personItemCosts + '</td><td> + ' + // item costs
+        personItemCosts + ' * ' + order.taxPercent / 100 + '</td><td> + ' + // taxes
+        personItemCosts + ' * ' + order.tipPercent / 100 + '</td><td> + ' + // tip
         order.feesPerPerson + '</td><td> = ' +
-        order.totals[person] + '</td></tr>';
+        prettifyNumber(order.totals[person]) + '</td></tr>';
   }
 
   breakdown += '</table>';
