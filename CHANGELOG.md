@@ -1,8 +1,8 @@
 # Change Log
 
 ## [Unreleased]
-- Fix #28
-- Fix #35
+- Fix [#28]
+- Fix [#35]
 - Bug fixes to service worker
 
 ## [0.3] - 2016-12-05
@@ -21,3 +21,5 @@
 [Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.3...HEAD
 [0.3]: https://github.com/GustavoFernandes/order-splitter/compare/v0.2...v0.3
 [0.2]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...v0.2
+[#28]: https://github.com/GustavoFernandes/order-splitter/issues/28
+[#35]: https://github.com/GustavoFernandes/order-splitter/issues/35
