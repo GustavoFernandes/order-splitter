@@ -137,8 +137,8 @@ function makeBreakdownDisplay (order) {
   for (var person in order.costs) {
     breakdown += '<tr><td>' + person + '</td><td>' +
         order.costs[person] + '</td><td> + ' + // item costs
-        order.costs[person] + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
-        order.costs[person] + ' * ' + order.tipPercent + '</td><td> + ' + // tip
+        order.costs[person] + ' * ' + order.taxPercent / 100 + '</td><td> + ' + // taxes
+        order.costs[person] + ' * ' + order.tipPercent / 100 + '</td><td> + ' + // tip
         order.feesPerPerson + '</td><td> = ' +
         order.totals[person] + '</td></tr>';
   }
