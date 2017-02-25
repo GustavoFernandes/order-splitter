@@ -35,7 +35,7 @@ function parseQueryStringInput(input) {
       map.persons[pair[0]] = Number(pair[1]);
     }
   }
-  
+
   if (!map.hasOwnProperty('tax') ||
       !map.hasOwnProperty('fee') ||
       !map.hasOwnProperty('tip')) {
@@ -63,11 +63,11 @@ function parseOrderUpInput(text) {
   };
   var itemCost = null;
   var array = text.split('\n');
-  
+
   for (var i = 0; i < array.length; i++) {
     var line = array[i].trim();
     line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
-    
+
     if (!itemCost) {
       var dollarIndex = line.indexOf('$');
       if (dollarIndex > -1) {
@@ -75,20 +75,20 @@ function parseOrderUpInput(text) {
       }
       continue;
     }
-    
+
     var labelIndex = line.indexOf(LABEL);
     if (labelIndex > -1) {
       var person = line.substring(labelIndex + LABEL.length, line.length);
-      
+
       if (map.persons[person] == null) {
         map.persons[person] = 0;
       }
-      
+
       map.persons[person] += itemCost;
       itemCost = null;
     }
   }
-  
+
   return map;
 }
 
@@ -187,13 +187,30 @@ function pad(n) {
   return s;
 }
 
+/**
+ * Returns a listing of names to split costs
+ */
 function makeTable(object) {
-  var table = '<table>';
-  for (var x in object) {
-    table += '<tr><td>' + x + '</td><td>$' + this.prettifyNumber(object[x]) + '</td></tr>';
+  // get length of longest name
+  var longestName = -1;
+  for (var p in object) {
+    longestName = Math.max(p.length, longestName);
   }
-  table += '</table>';
-  return table;
+
+  // add 1 to longest name for a space after name
+  longestName += 1;
+
+  var output = '';
+  var name;
+  for (p in object) {
+    name = p;
+    for (var i = p.length; i < longestName; i++) {
+      name += ' ';
+    }
+    output += name + '$' + this.prettifyNumber(object[p]) + '<br>';
+  }
+
+  return output;
 }
 
 /**
