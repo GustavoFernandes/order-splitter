@@ -140,7 +140,7 @@ function makeBreakdownDisplay (order) {
         order.costs[person] + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
         order.costs[person] + ' * ' + order.tipPercent + '</td><td> + ' + // tip
         order.feesPerPerson + '</td><td> = ' +
-        order.costs[person] + '</td></tr>';
+        order.totals[person] + '</td></tr>';
   }
 
   breakdown += '</table>';
