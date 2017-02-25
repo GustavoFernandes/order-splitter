@@ -1,6 +1,8 @@
 # Change Log
 
 ## [Unreleased]
+- Fix #28
+- Fix #35
 - Bug fixes to service worker
 
 ## [0.3] - 2016-12-05
