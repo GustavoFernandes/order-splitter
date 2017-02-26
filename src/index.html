@@ -37,8 +37,7 @@
 		Taxes: $<input id="taxes" type="text"><br>
 		Fees: $<input id="fees" type="text"><br>
 		Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="text"><span id="percentageSpan">%</span>
-		<input type="radio" name="tiptype" onclick="onTipTypeRadioButtonClick()" value="fixed">Fixed
-		<input type="radio" name="tiptype" onclick="onTipTypeRadioButtonClick()" value="percentage" checked>Percentage<br>
+		<input id="tipTypeCheckbox" type="checkbox" onclick="onTipTypeClick()" checked>Percentage<br>
 		<button onclick="onSplitButtonClick()">Split</button>
 		<p id="result">
 	</body>

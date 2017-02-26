@@ -11,19 +11,10 @@ function init () {
   }
 }
 
-function onTipTypeRadioButtonClick (radioButton) {
-  var tipType = getTipType();
-  document.getElementById('fixedSpan').hidden = tipType !== 'fixed';
-  document.getElementById('percentageSpan').hidden = tipType !== 'percentage';
-}
-
-function getTipType () {
-  var radioButtons = document.getElementsByName('tiptype');
-  for (var i = 0; i < radioButtons.length; i++) {
-    if (radioButtons[i].checked) {
-      return radioButtons[i].value;
-    }
-  }
+function onTipTypeClick () {
+  var isTipTypePercentage = document.getElementById('tipTypeCheckbox').checked;
+  document.getElementById('fixedSpan').hidden = isTipTypePercentage;
+  document.getElementById('percentageSpan').hidden = !isTipTypePercentage;
 }
 
 function onSplitButtonClick () {
