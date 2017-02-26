@@ -36,7 +36,8 @@
 		</table>
 		Taxes: $<input id="taxes" type="text"><br>
 		Fees: $<input id="fees" type="text"><br>
-		Tip percentage: <input id="tip" type="text">%<br>
+		Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="text"><span id="percentageSpan">%</span>
+		<input id="percentageCheckbox" type="checkbox" onclick="onPercentageCheckboxClick()" checked>Percentage<br>
 		<button onclick="onSplitButtonClick()">Split</button>
 		<p id="result">
 	</body>
