@@ -28,3 +28,14 @@ gulp.task('js-lint', function() {
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
 });
+
+gulp.task('serve', function() {
+    var browserSync = require('browser-sync');
+    browserSync({
+        server: {
+            baseDir: "./src/"
+        },
+        notify: false
+    });
+    gulp.watch(["./src/*"], browserSync.reload);
+});
