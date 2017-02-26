@@ -10,6 +10,7 @@ function parseQueryStringInput (queryString) {
   var overheads = ['fee', 'tax']; // tip is a special case, it maps to tipPercent
 
   var pairs = queryString.split('&');
+  pairs = pairs.map(pair => decodeURIComponent(pair).trim());
   var order = Order();
 
   for (var i = 0; i < pairs.length; i++) {

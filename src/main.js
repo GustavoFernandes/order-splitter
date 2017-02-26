@@ -4,7 +4,6 @@ function init () {
   // check for URL query parameters
   if (window.location.search) {
     var queryString = window.location.search.substring(1); // remove prefixing '?'
-    queryString = decodeURI(queryString);
     handleOrder(function () {
       return parseQueryStringInput(queryString);
     });
@@ -121,10 +120,8 @@ function makeHyperlink (tax, fee, tipPercent, personItemCosts) {
   link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tipPercent;
 
   for (var p in personItemCosts) {
-    link += '&' + p + '=' + prettifyNumber(personItemCosts[p]);
+    link += '&' + encodeURIComponent(p) + '=' + prettifyNumber(personItemCosts[p]);
   }
-
-  link = encodeURI(link);
 
   return '<a href=' + link + '>' + link + '</a>';
 }
