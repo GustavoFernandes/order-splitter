@@ -1,5 +1,9 @@
 # Change Log
 
+## [Unreleased]
+### Breaking Changes
+- "Tip" in URL query string now represents a fixed monetary amount as opposed to a percentage
+
 ## [0.4] - 2017-02-25
 - Fix [#23]
 - Fix [#28]
