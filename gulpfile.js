@@ -23,7 +23,8 @@ gulp.task('js-lint', function() {
     }))
         .pipe(jshint({
             eqeqeq: true,
-            esversion: 6
+            esversion: 6,
+            eqnull: true
         }))
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(jshint.reporter('fail'));
