@@ -1,4 +1,4 @@
-function Order (fee, tax, tipPercent) {
+function Order (fee, tax, tip, isTipPercentage) {
   var subtotal = 0;
   var costs = {};
 
@@ -13,7 +13,7 @@ function Order (fee, tax, tipPercent) {
       tax = 0;
     }
 
-    if (!tipPercent) {
+    if (!tip) {
       console.warn('Tip unset; defaulting to 0');
       tipPercent = 0;
     }
@@ -37,16 +37,26 @@ function Order (fee, tax, tipPercent) {
       tax = x;
     },
 
-    set tipPercent (x) {
-      tipPercent = x / 100;
+    set tip (x) {
+      tip = x;
+    },
+
+    set isTipPercentage (x) {
+      isTipPercentage = x;
     },
 
     split: function () {
       setDefaults();
 
+      if (isTipPercentage) {
+        tipPercent = tip / 100;
+        tip = tipPercent * subtotal;
+      } else {
+        tipPercent = tip / subtotal;
+      }
+
       taxPercent = tax / subtotal;
       feesPerPerson = fee / Object.keys(costs).length;
-      tip = tipPercent * subtotal;
       total = subtotal + tax + fee + tip;
 
       totals = {};
@@ -87,6 +97,10 @@ function Order (fee, tax, tipPercent) {
       return tipPercent * 100;
     },
 
+    get isTipPercentage () {
+      return isTipPercentage;
+    },
+
     get total () {
       return total;
     },
@@ -102,7 +116,8 @@ function Order (fee, tax, tipPercent) {
 
   order.fee = fee;
   order.tax = tax;
-  order.tipPercent = tipPercent;
+  order.tip = tip;
+  order.isTipPercentage = isTipPercentage;
 
   return order;
 }
