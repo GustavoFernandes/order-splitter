@@ -1,0 +1,21 @@
+{
+  "name": "order-splitter",
+  "version": "0.3.0",
+  "description": "OrderUp order splitter",
+  "main": "src/main.js",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GustavoFernandes/order-splitter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GustavoFernandes/order-splitter/issues"
+  },
+  "homepage": "https://github.com/GustavoFernandes/order-splitter#readme"
+}
