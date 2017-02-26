@@ -1,13 +1,12 @@
 /**
  * Parses input from a URL query string into an Order.
  * @example
- * // where tip is a percentage
- * parseQueryStringInput('tax=0.30&fee=1.50&tip=15&Gus=5.00');
+ * parseQueryStringInput('tax=0.30&fee=1.50&tip=1.25&Gus=5.00');
  * @param {string} queryString - The URL query string
  * @returns {Order} An order parsed from the URL query string
  */
 function parseQueryStringInput (queryString) {
-  var overheads = ['fee', 'tax']; // tip is a special case, it maps to tipPercent
+  var overheads = ['fee', 'tax', 'tip'];
 
   var pairs = queryString.split('&');
   var order = Order();
@@ -17,9 +16,7 @@ function parseQueryStringInput (queryString) {
 
     pairValues[1] = Number(pairValues[1]);
 
-    if (pairValues[0] === 'tip') {
-      order.tipPercent = pairValues[1];
-    } else if (overheads.indexOf(pairValues[0]) > -1) {
+    if (overheads.indexOf(pairValues[0]) > -1) {
       order[pairValues[0]] = pairValues[1];
     } else {
       order.addItem(pairValues[0], pairValues[1]);
