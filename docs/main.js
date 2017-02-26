@@ -65,7 +65,7 @@ function prettifyNumber (n) {
   // pad to 2 decimal places if necessary
   var s = n.toString();
 
-  if (s.indexOf('.') == -1) {
+  if (s.indexOf('.') === -1) {
     s += '.';
   }
 
@@ -114,7 +114,7 @@ function makeTotalsDisplay (totals) {
  */
 function makeHyperlink (tax, fee, tipPercent, personItemCosts) {
   var link = window.location.origin + window.location.pathname;
-  if (link.indexOf('index.html') == -1) {
+  if (link.indexOf('index.html') === -1) {
     link += 'index.html';
   }
 

@@ -98,7 +98,7 @@ function Order (fee, tax, tipPercent) {
     get totals () {
       return totals;
     }
-  }
+  };
 
   order.fee = fee;
   order.tax = tax;
