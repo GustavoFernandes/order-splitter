@@ -11,10 +11,10 @@ function init () {
   }
 }
 
-function onTipTypeClick () {
-  var isTipTypePercentage = document.getElementById('tipTypeCheckbox').checked;
-  document.getElementById('fixedSpan').hidden = isTipTypePercentage;
-  document.getElementById('percentageSpan').hidden = !isTipTypePercentage;
+function onPercentageCheckboxClick () {
+  var isTipPercentage = document.getElementById('percentageCheckbox').checked;
+  document.getElementById('fixedSpan').hidden = isTipPercentage;
+  document.getElementById('percentageSpan').hidden = !isTipPercentage;
 }
 
 function onSplitButtonClick () {
