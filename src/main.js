@@ -9,10 +9,32 @@ function init () {
       return parseQueryStringInput(queryString);
     });
   }
+
+  loadPreferences();
+}
+
+/**
+ * Loads user preferences from localStorage.
+ */
+function loadPreferences () {
+  if (Storage) {
+    if (localStorage.getItem('isTipPercentage') === 'false') {
+      // tip is a percentage by default, update if user prefs is 'false'
+      updateTipComponents(false);
+      document.getElementById('percentageCheckbox').checked = false;
+    }
+  }
 }
 
 function onPercentageCheckboxClick () {
-  var isTipPercentage = document.getElementById('percentageCheckbox').checked;
+  updateTipComponents(document.getElementById('percentageCheckbox').checked);
+}
+
+/**
+ * Updates the tip components according to the tip being a percentage.
+ * @param {boolean} isTipPercentage
+ */
+function updateTipComponents (isTipPercentage) {
   document.getElementById('fixedSpan').hidden = isTipPercentage;
   document.getElementById('percentageSpan').hidden = !isTipPercentage;
 }
