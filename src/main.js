@@ -27,7 +27,13 @@ function loadPreferences () {
 }
 
 function onPercentageCheckboxClick () {
-  updateTipComponents(document.getElementById('percentageCheckbox').checked);
+  var isTipPercentage = document.getElementById('percentageCheckbox').checked;
+  updateTipComponents(isTipPercentage);
+
+  // save user preference to localStorage
+  if (Storage) {
+    localStorage.setItem('isTipPercentage', isTipPercentage);
+  }
 }
 
 /**
