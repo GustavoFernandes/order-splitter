@@ -7,7 +7,7 @@ var jshint = require('gulp-jshint');
 
 gulp.task('default', ['copy']);
 
-gulp.task('copy', ['clean', 'js-lint'], function() {
+gulp.task('copy', ['clean', 'lint'], function() {
     return gulp.src(src)
         .pipe(gulp.dest(deployDir));
 });
@@ -17,7 +17,7 @@ gulp.task('clean', function() {
         .pipe(clean());
 });
 
-gulp.task('js-lint', function() {
+gulp.task('lint', function() {
     return gulp.src(src.map(function(path) {
         return path+'/*.js';
     }))
