@@ -8,6 +8,7 @@ var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 var inject = require('gulp-inject');
+var minifyHtml = require('gulp-minify-html');
 
 gulp.task('default', ['clean', 'lint', 'index']);
 
@@ -58,4 +59,13 @@ gulp.task('index', function () {
 
   return target.pipe(inject(sources))
       .pipe(gulp.dest('src'));
+});
+
+gulp.task('build-index', ['scripts'], function () {
+  var target = gulp.src('src/index.html');
+  var sources = gulp.src([deployDir + '/all.min.js']);
+
+  return target.pipe(inject(sources))
+      .pipe(minifyHtml())
+      .pipe(gulp.dest(deployDir));
 });
