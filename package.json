@@ -3,12 +3,10 @@
   "version": "0.3.0",
   "description": "OrderUp order splitter",
   "main": "src/main.js",
-  "dependencies": {
+  "devDependencies": {
     "browser-sync": "^2.18.7",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2"
-  },
-  "devDependencies": {
     "gulp-jshint": "^2.0.4",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1"
