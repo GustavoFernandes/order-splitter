@@ -9,6 +9,7 @@ var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 var inject = require('gulp-inject');
 var minifyHtml = require('gulp-minify-html');
+var minifyCss = require('gulp-clean-css');
 var browserSync = require('browser-sync');
 
 gulp.task('default', ['lint', 'html']);
@@ -58,6 +59,7 @@ gulp.task('build-js', ['clean'], function () {
 
 gulp.task('build-css', ['clean'], function () {
   return gulp.src('src/**/*.css')
+      .pipe(minifyCss())
       .pipe(gulp.dest(deployDir));
 });
 
