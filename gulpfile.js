@@ -19,9 +19,12 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  return gulp.src(src.map(function (path) {
+  var filesToLint = src.map(function (path) {
     return path + '/*.js';
-  }))
+  });
+  filesToLint.push('gulpfile.js');
+
+  return gulp.src(filesToLint)
       .pipe(jshint({
         eqeqeq: true,
         esversion: 6,
