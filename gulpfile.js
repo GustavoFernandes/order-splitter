@@ -18,8 +18,8 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  return gulp.src(src.map(function(path) {
-    return path+'/*.js';
+  return gulp.src(src.map(function (path) {
+    return path + '/*.js';
   }))
       .pipe(jshint({
         eqeqeq: true,
@@ -34,9 +34,9 @@ gulp.task('serve', function () {
   var browserSync = require('browser-sync');
   browserSync({
     server: {
-      baseDir: "./src/"
+      baseDir: './src/'
     },
     notify: false
   });
-  gulp.watch(["./src/*"], browserSync.reload);
+  gulp.watch(['./src/*'], browserSync.reload);
 });
