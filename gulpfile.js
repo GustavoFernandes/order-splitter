@@ -9,8 +9,9 @@ var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
 var inject = require('gulp-inject');
 var minifyHtml = require('gulp-minify-html');
+var browserSync = require('browser-sync');
 
-gulp.task('default', ['clean', 'lint', 'index']);
+gulp.task('default', ['clean', 'lint', 'html']);
 
 gulp.task('clean', function () {
   return gulp.src(deployDir)
@@ -30,18 +31,15 @@ gulp.task('lint', function () {
       .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('serve', function () {
-  var browserSync = require('browser-sync');
-  browserSync({
-    server: {
-      baseDir: './src/'
-    },
-    notify: false
-  });
-  gulp.watch(['./src/*'], browserSync.reload);
+gulp.task('html', function () {
+  var target = gulp.src('src/index.html');
+  var sources = gulp.src(['src/**/*.js', 'src/**/*.css']);
+
+  return target.pipe(inject(sources))
+      .pipe(gulp.dest('src'));
 });
 
-gulp.task('scripts', ['clean'], function () {
+gulp.task('build-js', ['clean'], function () {
   return gulp.src(src.map(function (path) {
     return path + '/*.js';
   }))
@@ -53,19 +51,21 @@ gulp.task('scripts', ['clean'], function () {
       .pipe(gulp.dest(deployDir));
 });
 
-gulp.task('index', function () {
-  var target = gulp.src('src/index.html');
-  var sources = gulp.src(['src/**/*.js', 'src/**/*.css']);
-
-  return target.pipe(inject(sources))
-      .pipe(gulp.dest('src'));
-});
-
-gulp.task('build-index', ['scripts'], function () {
+gulp.task('build-html', ['build-js'], function () {
   var target = gulp.src('src/index.html');
   var sources = gulp.src([deployDir + '/all.min.js']);
 
   return target.pipe(inject(sources))
       .pipe(minifyHtml())
       .pipe(gulp.dest(deployDir));
+});
+
+gulp.task('serve', function () {
+  browserSync({
+    server: {
+      baseDir: './src/'
+    },
+    notify: false
+  });
+  gulp.watch(['./src/*'], browserSync.reload);
 });
