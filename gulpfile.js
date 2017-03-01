@@ -13,6 +13,8 @@ var browserSync = require('browser-sync');
 
 gulp.task('default', ['lint', 'html']);
 
+gulp.task('build', ['build-html']);
+
 gulp.task('clean', function () {
   return gulp.src(deployDir)
       .pipe(clean());
@@ -54,9 +56,14 @@ gulp.task('build-js', ['clean'], function () {
       .pipe(gulp.dest(deployDir));
 });
 
-gulp.task('build-html', ['build-js'], function () {
+gulp.task('build-css', ['clean'], function () {
+  return gulp.src('src/**/*.css')
+      .pipe(gulp.dest(deployDir));
+});
+
+gulp.task('build-html', ['build-js', 'build-css'], function () {
   var target = gulp.src('src/index.html');
-  var sources = gulp.src([deployDir + '/all.min.js']);
+  var sources = gulp.src(deployDir + '/*.{js,css}');
 
   return target.pipe(inject(sources))
       .pipe(minifyHtml())
