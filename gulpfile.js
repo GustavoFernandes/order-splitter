@@ -7,13 +7,9 @@ var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
 var uglify = require('gulp-uglify');
 var babel = require('gulp-babel');
+var inject = require('gulp-inject');
 
-gulp.task('default', ['copy']);
-
-gulp.task('copy', ['clean', 'lint'], function () {
-  return gulp.src(src)
-      .pipe(gulp.dest(deployDir));
-});
+gulp.task('default', ['clean', 'lint', 'index']);
 
 gulp.task('clean', function () {
   return gulp.src(deployDir)
@@ -54,4 +50,12 @@ gulp.task('scripts', ['clean'], function () {
       .pipe(concat('all.min.js'))
       .pipe(uglify())
       .pipe(gulp.dest(deployDir));
+});
+
+gulp.task('index', function () {
+  var target = gulp.src('src/index.html');
+  var sources = gulp.src(['src/**/*.js', 'src/**/*.css']);
+
+  return target.pipe(inject(sources))
+      .pipe(gulp.dest('src'));
 });

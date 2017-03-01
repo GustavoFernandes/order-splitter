@@ -10,6 +10,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.2",
     "gulp-concat": "^2.6.1",
+    "gulp-inject": "^4.2.0",
     "gulp-jshint": "^2.0.4",
     "gulp-uglify": "^2.0.1",
     "jshint": "^2.9.4",
