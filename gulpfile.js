@@ -3,7 +3,10 @@ var deployDir = 'docs';
 
 var gulp = require('gulp');
 var clean = require('gulp-clean');
+var concat = require('gulp-concat');
 var jshint = require('gulp-jshint');
+var uglify = require('gulp-uglify');
+var babel = require('gulp-babel');
 
 gulp.task('default', ['copy']);
 
@@ -39,4 +42,16 @@ gulp.task('serve', function () {
     notify: false
   });
   gulp.watch(['./src/*'], browserSync.reload);
+});
+
+gulp.task('scripts', ['clean'], function () {
+  return gulp.src(src.map(function (path) {
+    return path + '/*.js';
+  }))
+      .pipe(babel({
+        presets: ['es2015']
+      }))
+      .pipe(concat('all.min.js'))
+      .pipe(uglify())
+      .pipe(gulp.dest(deployDir));
 });
