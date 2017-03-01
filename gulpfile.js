@@ -11,7 +11,7 @@ var inject = require('gulp-inject');
 var minifyHtml = require('gulp-minify-html');
 var browserSync = require('browser-sync');
 
-gulp.task('default', ['clean', 'lint', 'html']);
+gulp.task('default', ['lint', 'html']);
 
 gulp.task('clean', function () {
   return gulp.src(deployDir)
