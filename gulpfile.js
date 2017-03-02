@@ -11,6 +11,7 @@ var inject = require('gulp-inject');
 var minifyHtml = require('gulp-minify-html');
 var minifyCss = require('gulp-clean-css');
 var browserSync = require('browser-sync');
+var injectVersion = require('gulp-inject-version');
 
 gulp.task('default', ['lint', 'html']);
 
@@ -42,7 +43,7 @@ gulp.task('html', function () {
   var sources = gulp.src(['src/**/*.js', 'src/**/*.css']);
 
   return target.pipe(inject(sources, {
-    relative:true
+    relative: true
   }))
       .pipe(gulp.dest('src'));
 });
@@ -51,6 +52,7 @@ gulp.task('build-js', ['clean'], function () {
   return gulp.src(src.map(function (path) {
     return path + '/*.js';
   }))
+      .pipe(injectVersion())
       .pipe(babel({
         presets: ['es2015']
       }))
@@ -73,6 +75,7 @@ gulp.task('build-html', ['build-js', 'build-css'], function () {
     ignorePath: deployDir,
     addRootSlash: false
   }))
+      .pipe(injectVersion())
       .pipe(minifyHtml())
       .pipe(gulp.dest(deployDir));
 });
