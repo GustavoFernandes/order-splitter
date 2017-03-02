@@ -23,9 +23,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  var filesToLint = src.map(function (path) {
-    return path + '/*.js';
-  });
+  var filesToLint = src.map(path => path + '/*.js');
   filesToLint.push('gulpfile.js');
 
   return gulp.src(filesToLint)
@@ -39,9 +37,7 @@ gulp.task('lint', function () {
 });
 
 gulp.task('build-js', ['clean'], function () {
-  return gulp.src(src.map(function (path) {
-    return path + '/*.js';
-  }))
+  return gulp.src(src.map(path => path + '/*.js'))
       .pipe(injectVersion())
       .pipe(babel({
         presets: ['es2015']
