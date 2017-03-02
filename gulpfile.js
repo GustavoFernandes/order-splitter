@@ -13,7 +13,7 @@ var minifyCss = require('gulp-clean-css');
 var browserSync = require('browser-sync');
 var injectVersion = require('gulp-inject-version');
 
-gulp.task('default', ['lint', 'html']);
+gulp.task('default', ['lint']);
 
 gulp.task('build', ['build-html']);
 
@@ -55,7 +55,9 @@ gulp.task('build-css', ['clean'], function () {
 
 gulp.task('build-html', ['build-js', 'build-css'], function () {
   var target = gulp.src('src/index.html');
-  var sources = gulp.src(deployDir + '/*.{js,css}');
+  var sources = gulp.src(deployDir + '/*.{js,css}', {
+    read: false
+  });
 
   return target.pipe(inject(sources, {
     ignorePath: deployDir,
