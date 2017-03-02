@@ -38,16 +38,6 @@ gulp.task('lint', function () {
       .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('html', function () {
-  var target = gulp.src('src/index.html');
-  var sources = gulp.src(['src/**/*.js', 'src/**/*.css']);
-
-  return target.pipe(inject(sources, {
-    relative: true
-  }))
-      .pipe(gulp.dest('src'));
-});
-
 gulp.task('build-js', ['clean'], function () {
   return gulp.src(src.map(function (path) {
     return path + '/*.js';
