@@ -1,6 +1,6 @@
 # Change Log
 
-## [Unreleased]
+## [0.5.0] - 2017-03-05
 - Allow for tip to be entered as both percentage and actual decimal value [#25]
 - Temporarily removed offline caching capabilities
 
@@ -26,7 +26,8 @@
 ## 0.1 - 2016-11-19
 - Added initial version
 
-[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.4...HEAD
+[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/GustavoFernandes/order-splitter/compare/v0.4...v0.5.0
 [0.4]: https://github.com/GustavoFernandes/order-splitter/compare/v0.3...v0.4
 [0.3]: https://github.com/GustavoFernandes/order-splitter/compare/v0.2...v0.3
 [0.2]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...v0.2
