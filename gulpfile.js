@@ -37,7 +37,10 @@ gulp.task('lint', function () {
 });
 
 gulp.task('build-js', ['clean'], function () {
-  return gulp.src(src.map(path => path + '/*.js'))
+  // TODO: Removing sw directory from build for now
+  //return gulp.src(src.map(path => path + '/*.js'))
+
+  return gulp.src('./src/**/*.js')
       .pipe(injectVersion())
       .pipe(babel({
         presets: ['es2015']

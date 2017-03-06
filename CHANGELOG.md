@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Allow for tip to be entered as both percentage and actual decimal value [#25]
+- Temporarily removed offline caching capabilities
 
 ### Breaking Changes
 - "Tip" in URL query string now represents a fixed monetary amount as opposed to a percentage
