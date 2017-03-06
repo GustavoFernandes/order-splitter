@@ -15,7 +15,7 @@ function Order (fee, tax, tip, isTipPercentage) {
 
     if (!tip) {
       console.warn('Tip unset; defaulting to 0');
-      tipPercent = 0;
+      tip = 0;
     }
   }
 
