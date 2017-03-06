@@ -38,13 +38,16 @@ gulp.task('lint', function () {
 
 gulp.task('build-js', ['clean'], function () {
   // TODO: Removing sw directory from build for now
-  //return gulp.src(src.map(path => path + '/*.js'))
+  // return gulp.src(src.map(path => path + '/*.js'))
 
   return gulp.src('./src/**/*.js')
       .pipe(injectVersion())
-      .pipe(babel({
-        presets: ['es2015']
-      }))
+
+      // TODO: babel breaks order.js but is needed for sw stuff (sw is currently not included in build)
+      // .pipe(babel({
+      //  presets: ['es2015']
+      // }))
+      
       .pipe(concat('all.min.js'))
       .pipe(uglify())
       .pipe(gulp.dest(deployDir));
