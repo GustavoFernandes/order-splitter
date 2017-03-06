@@ -7,9 +7,9 @@
 - "Tip" in URL query string now represents a fixed monetary amount as opposed to a percentage
 
 ## [0.4] - 2017-02-25
-- Fix [#23]
-- Fix [#28]
-- Fix [#35]
+- Fix [#23] - Results table does not format correctly
+- Fix [#28] - Whitespaces in names are not sanitized in URL
+- Fix [#35] - Item costs are not rounded
 - Bug fixes to service worker
 
 ## [0.3] - 2016-12-05
