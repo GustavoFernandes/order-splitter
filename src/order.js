@@ -30,22 +30,6 @@ function Order (fee, tax, tip, isTipPercentage) {
       subtotal += cost;
     },
 
-    set fee (x) {
-      fee = x;
-    },
-
-    set tax (x) {
-      tax = x;
-    },
-
-    set tip (x) {
-      tip = x;
-    },
-
-    set isTipPercentage (x) {
-      isTipPercentage = x;
-    },
-
     split: function () {
       setDefaults();
 
@@ -68,6 +52,22 @@ function Order (fee, tax, tip, isTipPercentage) {
             costs[person] * tipPercent + // tip on items
             feesPerPerson;
       }
+    },
+
+    set fee (x) {
+      fee = x;
+    },
+
+    set tax (x) {
+      tax = x;
+    },
+
+    set tip (x) {
+      tip = x;
+    },
+
+    set isTipPercentage (x) {
+      isTipPercentage = x;
     },
 
     get costs () {
