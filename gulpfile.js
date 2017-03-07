@@ -42,12 +42,9 @@ gulp.task('build-js', ['clean'], function () {
 
   return gulp.src('./src/**/*.js')
       .pipe(injectVersion())
-
-      // TODO: babel breaks order.js but is needed for sw stuff (sw is currently not included in build)
-      // .pipe(babel({
-      //  presets: ['es2015']
-      // }))
-      
+      .pipe(babel({
+       presets: ['es2015']
+      }))
       .pipe(concat('all.min.js'))
       .pipe(uglify())
       .pipe(gulp.dest(deployDir));
