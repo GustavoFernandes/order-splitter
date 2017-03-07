@@ -15,7 +15,7 @@ var injectVersion = require('gulp-inject-version');
 
 gulp.task('default', ['lint']);
 
-gulp.task('build', ['build-html', 'deploy-sw']);
+gulp.task('build', ['build-html', 'build-sw']);
 
 gulp.task('clean', function () {
   return gulp.src(deployDir)
@@ -69,8 +69,13 @@ gulp.task('build-html', ['build-js', 'build-css'], function () {
       .pipe(gulp.dest(deployDir));
 });
 
-gulp.task('deploy-sw', ['clean'], function () {
+gulp.task('build-sw', ['clean'], function () {
   return gulp.src('./sw/sw.js')
+      .pipe(injectVersion())
+      .pipe(babel({
+        presets: ['es2015']
+      }))
+      .pipe(uglify())
       .pipe(gulp.dest(deployDir));
 });
 
