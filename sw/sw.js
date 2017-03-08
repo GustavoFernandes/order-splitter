@@ -1,5 +1,5 @@
-let CACHE_NAME = 'order-splitter-cache-v0.4';
-let urlsToCache = ['/', '/main.js'];
+let CACHE_NAME = 'order-splitter-cache-%%GULP_INJECT_VERSION%%';
+let urlsToCache = ['/', '/styles.css', '/all.min.js'];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(

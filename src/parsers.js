@@ -1,13 +1,12 @@
 /**
  * Parses input from a URL query string into an Order.
  * @example
- * // where tip is a percentage
- * parseQueryStringInput('tax=0.30&fee=1.50&tip=15&Gus=5.00');
+ * parseQueryStringInput('tax=0.30&fee=1.50&tip=1.25&Gus=5.00');
  * @param {string} queryString - The URL query string
  * @returns {Order} An order parsed from the URL query string
  */
 function parseQueryStringInput (queryString) {
-  var overheads = ['fee', 'tax']; // tip is a special case, it maps to tipPercent
+  var overheads = ['fee', 'tax', 'tip'];
 
   var pairs = queryString.split('&');
   var order = Order();
@@ -17,9 +16,7 @@ function parseQueryStringInput (queryString) {
 
     pairValues[1] = Number(pairValues[1]);
 
-    if (pairValues[0] === 'tip') {
-      order.tipPercent = pairValues[1];
-    } else if (overheads.indexOf(pairValues[0]) > -1) {
+    if (overheads.indexOf(pairValues[0]) > -1) {
       order[pairValues[0]] = pairValues[1];
     } else {
       order.addItem(decodeURIComponent(pairValues[0]), pairValues[1]);
@@ -32,14 +29,18 @@ function parseQueryStringInput (queryString) {
 /**
  * Parses the confirmation summary from an OrderUp.com order
  * @param {string} orderUpText - The confirmation summary from OrderUp.com
+ * @param {number} fee
+ * @param {number} tax
+ * @param {number} tip - The tip (either a fixed value or percentage)
+ * @param {boolean} isTipPercentage - True if the tip is a percentage as opposed to a fixed value
  * @return {Order} An order parsed from the OrderUp.com confirmation summary
  */
-function parseOrderUpInput (orderUpText, fee, tax, tipPercent) {
+function parseOrderUpInput (orderUpText, fee, tax, tip, isTipPercentage) {
   // TODO: check if the number at the beginning of the line affects the item cost
   // example: 2 Chicken $4.00
   //   should the cost for the person be $4 or $8?
 
-  var order = Order(fee, tax, tipPercent);
+  var order = Order(fee, tax, tip, isTipPercentage);
   var label = 'Label for:';
   var itemCost = null;
   var array = orderUpText.split('\n');

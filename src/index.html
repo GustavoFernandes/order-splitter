@@ -2,14 +2,17 @@
 	<head>
 		<title>Order Splitter</title>
 		<meta charset="UTF-8">
+		<!-- inject:js -->
 		<script src="main.js"></script>
-		<script src="parsers.js"></script>
 		<script src="order.js"></script>
-		<script src="install.js"></script>
+		<script src="parsers.js"></script>
+		<!-- endinject -->
+		<!-- inject:css -->
 		<link rel="stylesheet" href="styles.css">
+		<!-- endinject -->
 	</head>
 	<body>
-		<div align="right">v0.4</div>
+		<div align="right">%%GULP_INJECT_VERSION%%</div>
 		<table>
 			<tr>
 				<td>Order:</td>
@@ -36,7 +39,8 @@
 		</table>
 		Taxes: $<input id="taxes" type="text"><br>
 		Fees: $<input id="fees" type="text"><br>
-		Tip percentage: <input id="tip" type="text">%<br>
+		Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="text"><span id="percentageSpan">%</span>
+		<input id="percentageCheckbox" type="checkbox" onclick="onPercentageCheckboxClick()" checked>Percentage<br>
 		<button onclick="onSplitButtonClick()">Split</button>
 		<p id="result">
 	</body>
