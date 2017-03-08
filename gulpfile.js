@@ -15,7 +15,7 @@ var injectVersion = require('gulp-inject-version');
 
 gulp.task('default', ['lint']);
 
-gulp.task('build', ['build-html']);
+gulp.task('build', ['build-html', 'build-sw']);
 
 gulp.task('clean', function () {
   return gulp.src(deployDir)
@@ -37,17 +37,11 @@ gulp.task('lint', function () {
 });
 
 gulp.task('build-js', ['clean'], function () {
-  // TODO: Removing sw directory from build for now
-  // return gulp.src(src.map(path => path + '/*.js'))
-
-  return gulp.src('./src/**/*.js')
+  return gulp.src(['./src/**/*.js', './sw/install.js'])
       .pipe(injectVersion())
-
-      // TODO: babel breaks order.js but is needed for sw stuff (sw is currently not included in build)
-      // .pipe(babel({
-      //  presets: ['es2015']
-      // }))
-      
+      .pipe(babel({
+       presets: ['es2015']
+      }))
       .pipe(concat('all.min.js'))
       .pipe(uglify())
       .pipe(gulp.dest(deployDir));
@@ -60,8 +54,9 @@ gulp.task('build-css', ['clean'], function () {
 });
 
 gulp.task('build-html', ['build-js', 'build-css'], function () {
+  // Inject references of every JS and CSS file in the deploy directory (excluding sw.js) into index.html.
   var target = gulp.src('src/index.html');
-  var sources = gulp.src(deployDir + '/*.{js,css}', {
+  var sources = gulp.src(['!' + deployDir + '/sw.js', deployDir + '/*.{js,css}',], {
     read: false
   });
 
@@ -71,6 +66,16 @@ gulp.task('build-html', ['build-js', 'build-css'], function () {
   }))
       .pipe(injectVersion())
       .pipe(minifyHtml())
+      .pipe(gulp.dest(deployDir));
+});
+
+gulp.task('build-sw', ['clean'], function () {
+  return gulp.src('./sw/sw.js')
+      .pipe(injectVersion())
+      .pipe(babel({
+        presets: ['es2015']
+      }))
+      .pipe(uglify())
       .pipe(gulp.dest(deployDir));
 });
 
