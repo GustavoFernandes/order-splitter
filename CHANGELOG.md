@@ -1,5 +1,8 @@
 # Change Log
 
+## Unreleased
+- Brought back offline caching [#42]
+
 ## [0.5.0] - 2017-03-05
 - Allow for tip to be entered as both percentage and actual decimal value [#25]
 - Temporarily removed offline caching capabilities
@@ -35,3 +38,4 @@
 [#25]: https://github.com/GustavoFernandes/order-splitter/issues/25
 [#28]: https://github.com/GustavoFernandes/order-splitter/issues/28
 [#35]: https://github.com/GustavoFernandes/order-splitter/issues/35
+[#42]: https://github.com/GustavoFernandes/order-splitter/issues/42
