@@ -6,21 +6,34 @@
  * @returns {Order} An order parsed from the URL query string
  */
 function parseQueryStringInput (queryString) {
-  var overheads = ['fee', 'tax', 'tip'];
+  var overheads = {
+    fee: 0,
+    tax: 0,
+    tip: 0
+  };
+
+  var items = {};
 
   var pairs = queryString.split('&');
-  var order = Order();
 
+  // loop through all pairs to get overheads to create Order
   for (var i = 0; i < pairs.length; i++) {
     var pairValues = pairs[i].split('=');
 
     pairValues[1] = Number(pairValues[1]);
 
-    if (overheads.indexOf(pairValues[0]) > -1) {
-      order[pairValues[0]] = pairValues[1];
+    if (overheads.hasOwnProperty(pairValues[0])) {
+      overheads[pairValues[0]] = pairValues[1];
     } else {
-      order.addItem(decodeURIComponent(pairValues[0]), pairValues[1]);
+      items[pairValues[0]] = pairValues[1];
     }
+  }
+
+  var order = Order(overheads.fee, overheads.tax, overheads.tip, false);
+
+  // loop through items to add to Order
+  for (var item in items) {
+    order.addItem(decodeURIComponent(item), items[item]);
   }
 
   return order;

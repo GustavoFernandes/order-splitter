@@ -1,7 +1,7 @@
 function Order (fee, tax, tip, isTipPercentage) {
   var subtotal = 0;
   var costs = {};
-  var fee, tax, tip, isTipPercentage, feesPerPerson, taxPercent, tipPercent, total, subtotal, totals;
+  var feesPerPerson, taxPercent, tipPercent, total, totals;
 
   function setDefaults () {
     if (!fee) {
