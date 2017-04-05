@@ -1,7 +1,9 @@
 # Change Log
 
-## Unreleased
+## [0.5.1] - 2017-04-04
 - Brought back offline caching [#42]
+- Fix [#35] again - Item costs are not rounded
+- Fix [#36] - Names with '&' will break calculations from hyperlink
 
 ## [0.5.0] - 2017-03-05
 - Allow for tip to be entered as both percentage and actual decimal value [#25]
@@ -29,7 +31,8 @@
 ## 0.1 - 2016-11-19
 - Added initial version
 
-[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/GustavoFernandes/order-splitter/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/GustavoFernandes/order-splitter/compare/v0.5.0...0.5.1
 [0.5.0]: https://github.com/GustavoFernandes/order-splitter/compare/v0.4...v0.5.0
 [0.4]: https://github.com/GustavoFernandes/order-splitter/compare/v0.3...v0.4
 [0.3]: https://github.com/GustavoFernandes/order-splitter/compare/v0.2...v0.3
@@ -38,4 +41,5 @@
 [#25]: https://github.com/GustavoFernandes/order-splitter/issues/25
 [#28]: https://github.com/GustavoFernandes/order-splitter/issues/28
 [#35]: https://github.com/GustavoFernandes/order-splitter/issues/35
+[#36]: https://github.com/GustavoFernandes/order-splitter/issues/36
 [#42]: https://github.com/GustavoFernandes/order-splitter/issues/42
