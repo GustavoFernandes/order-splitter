@@ -2,6 +2,7 @@
 ## Deploying
 ### Bump the version
     npm --no-git-tag-version version <major|minor|patch>
+    git add package.json
 ### Update the change log and stage it
     git add CHANGELOG.md
 ### Build
