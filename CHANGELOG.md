@@ -1,5 +1,8 @@
 # Change Log
 
+## [Unreleased]
+  Fix [#2] - Input fields should validate numeric inputs
+
 ## [0.5.1] - 2017-04-04
 - Brought back offline caching [#42]
 - Fix [#35] again - Item costs are not rounded
@@ -37,6 +40,7 @@
 [0.4]: https://github.com/GustavoFernandes/order-splitter/compare/v0.3...v0.4
 [0.3]: https://github.com/GustavoFernandes/order-splitter/compare/v0.2...v0.3
 [0.2]: https://github.com/GustavoFernandes/order-splitter/compare/v0.1...v0.2
+[#2]: https://github.com/GustavoFernandes/order-splitter/issues/2
 [#23]: https://github.com/GustavoFernandes/order-splitter/issues/23
 [#25]: https://github.com/GustavoFernandes/order-splitter/issues/25
 [#28]: https://github.com/GustavoFernandes/order-splitter/issues/28
