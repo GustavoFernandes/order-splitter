@@ -5,17 +5,17 @@ function Order (fee, tax, tip, isTipPercentage) {
 
   function setDefaults () {
     if (!fee) {
-      console.warn('Fee unset; defaulting to 0');
+      console.log('Fee unset; defaulting to 0');
       fee = 0;
     }
 
     if (!tax) {
-      console.warn('Tax unset; defaulting to 0');
+      console.log('Tax unset; defaulting to 0');
       tax = 0;
     }
 
     if (!tip) {
-      console.warn('Tip unset; defaulting to 0');
+      console.log('Tip unset; defaulting to 0');
       tip = 0;
     }
   }
