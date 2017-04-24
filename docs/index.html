@@ -1,4 +1,4 @@
-<html><head><title>Order Splitter</title><meta charset=UTF-8><script src=all.min.js></script><link rel=stylesheet href=styles.css></head><body><div align=right>v0.5.1</div><table><tr><td>Order:</td></tr><tr><td><textarea id=textarea rows=20 cols=60></textarea></td><td>Example input:<br>(from OrderUp confirmation page)<pre>
+<html><head><title>Order Splitter</title><meta charset=UTF-8><script src=all.min.js></script><link rel=stylesheet href=styles.css></head><body><div align=right>v0.5.2</div><table><tr><td>Order:</td></tr><tr><td><textarea id=textarea rows=20 cols=60></textarea></td><td>Example input:<br>(from OrderUp confirmation page)<pre>
 1 	12 Nuggets - 	$4.39
 	Sauce: Ketchup
 	Label for:Alice
@@ -9,4 +9,4 @@
 1 	6 Wings - 	$6.29
 	Wing Seasoning: Sweet Honey BBQ
 	Label for:Charlie
-					</pre></td></tr></table>Taxes: $<input id=taxes type=text><br>Fees: $<input id=fees type=text><br>Tip: <span id=fixedSpan hidden>$</span><input id=tip type=text><span id=percentageSpan>%</span> <input id=percentageCheckbox type=checkbox onclick=onPercentageCheckboxClick() checked>Percentage<br><button onclick=onSplitButtonClick()>Split</button><p id=result></p></body></html>
+					</pre></td></tr></table>Taxes: $<input id=taxes type=number><br>Fees: $<input id=fees type=number><br>Tip: <span id=fixedSpan hidden>$</span><input id=tip type=number><span id=percentageSpan>%</span> <input id=percentageCheckbox type=checkbox onclick=onPercentageCheckboxClick() checked>Percentage<br><button onclick=onSplitButtonClick()>Split</button><p id=result></p></body></html>

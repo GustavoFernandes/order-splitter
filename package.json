@@ -1,6 +1,6 @@
 {
   "name": "order-splitter",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "OrderUp order splitter",
   "main": "src/main.js",
   "devDependencies": {
