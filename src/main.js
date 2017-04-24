@@ -152,7 +152,9 @@ function makeHyperlink (tax, fee, tip, personItemCosts) {
     link += 'index.html';
   }
 
-  link += '?tax=' + tax + '&fee=' + fee + '&tip=' + prettifyNumber(tip);
+  if (tip != 0) tip = prettifyNumber(tip);
+
+  link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
 
   for (var p in personItemCosts) {
     link += '&' + encodeURIComponent(p) + '=' + prettifyNumber(personItemCosts[p]);
