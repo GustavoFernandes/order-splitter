@@ -16,7 +16,7 @@ function parseQueryStringInput (queryString) {
 
     pairValues[1] = Number(pairValues[1]);
 
-    if (overheads.indexOf(pairValues[0]) > -1) {
+    if (overheads.indexOf(pairValues[0]) > -1 && order[pairValues[0]] != null) {
       order[pairValues[0]] = pairValues[1];
     } else {
       order.addItem(decodeURIComponent(pairValues[0]), pairValues[1]);

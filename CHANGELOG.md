@@ -3,6 +3,7 @@
 ## [Unreleased]
 - Fix [#2] - Input fields should validate numeric inputs
 - Fix [#45] - Inconsistent 0 values in the hyperlink
+- Fix [#47] - Special names break the link
 - Fix [#48] - Dollar signs in item names break order splitter
 
 ## [0.5.1] - 2017-04-04
@@ -50,4 +51,5 @@
 [#36]: https://github.com/GustavoFernandes/order-splitter/issues/36
 [#42]: https://github.com/GustavoFernandes/order-splitter/issues/42
 [#45]: https://github.com/GustavoFernandes/order-splitter/issues/45
+[#47]: https://github.com/GustavoFernandes/order-splitter/issues/47
 [#48]: https://github.com/GustavoFernandes/order-splitter/issues/48

@@ -22,6 +22,11 @@ function Order (fee, tax, tip, isTipPercentage) {
 
   var order = {
     addItem: function (name, cost) {
+      // TODO combine this reserved words array with parseQueryStringInput function in parsers.js
+      if (['fee', 'tax', 'tip'].indexOf(name) > -1) {
+        throw "Name \"" + name + "\" is reserved. Do not use \"tax\", \"tip\", or \"fee\" as a name.";
+      }
+
       if (costs[name] == null) {
         costs[name] = 0;
       }

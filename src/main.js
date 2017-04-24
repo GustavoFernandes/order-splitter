@@ -57,9 +57,14 @@ function onSplitButtonClick () {
 }
 
 function handleOrder (parserFunction) {
-  var order = parserFunction();
-  order.split();
-  display(order);
+  try {
+    var order = parserFunction();
+    order.split();
+    display(order);
+  } catch (error) {
+    alert(error);
+    console.error(error);
+  }
 }
 
 function display (order) {
