@@ -50,7 +50,7 @@ function parseOrderUpInput (orderUpText, fee, tax, tip, isTipPercentage) {
     line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
 
     if (!itemCost) {
-      var dollarIndex = line.indexOf('$');
+      var dollarIndex = line.lastIndexOf('$');
       if (dollarIndex > -1) {
         itemCost = Number(line.substring(dollarIndex + 1, line.length));
       }

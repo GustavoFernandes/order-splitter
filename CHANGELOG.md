@@ -1,7 +1,8 @@
 # Change Log
 
 ## [Unreleased]
-  Fix [#2] - Input fields should validate numeric inputs
+- Fix [#2] - Input fields should validate numeric inputs
+- Fix [#48] - Dollar signs in item names break order splitter
 
 ## [0.5.1] - 2017-04-04
 - Brought back offline caching [#42]
@@ -47,3 +48,4 @@
 [#35]: https://github.com/GustavoFernandes/order-splitter/issues/35
 [#36]: https://github.com/GustavoFernandes/order-splitter/issues/36
 [#42]: https://github.com/GustavoFernandes/order-splitter/issues/42
+[#48]: https://github.com/GustavoFernandes/order-splitter/issues/48
