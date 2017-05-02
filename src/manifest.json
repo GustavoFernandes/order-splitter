@@ -8,12 +8,6 @@
     "default_icon": "icon.png",
     "default_popup": "index.html"
   },
-  "content_scripts": [
-      { 
-      "matches": ["*://*.orderup.com/*"],
-      "js": ["test.js"]
-      }
-  ],
   "permissions": [
     "activeTab"
   ]
