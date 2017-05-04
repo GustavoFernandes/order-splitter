@@ -1,5 +1,4 @@
 const deployDir = 'dist';
-const srcList = ['src/**', 'sw/**'];
 
 const copyTheseFilesToDist = [
   './src/*.png'
@@ -70,10 +69,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  var filesToLint = srcList.map(path => path + '/*.js');
-  filesToLint.push('gulpfile.js');
-
-  return gulp.src(filesToLint)
+  return gulp.src(['gulpfile.js, ./src/**.js'])
       .pipe(jshint({
         eqeqeq: true,
         esversion: 6,
@@ -89,54 +85,6 @@ gulp.task('gh-deploy', ['build'], () => {
       remote: "origin",
       branch: "gh-pages"
     }));
-});
-
-gulp.task('build-js', ['clean'], function () {
-  return gulp.src(['./src/**/*.js', './sw/install.js'])
-      .pipe(injectVersion())
-      .pipe(babel({
-       presets: ['es2015']
-      }))
-      .pipe(concat('all.min.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('build-css', ['clean'], function () {
-  return gulp.src('src/**/*.css')
-      .pipe(minifyCss())
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('build-extension', ['clean'], function () {
-  return gulp.src(['src/manifest.json', 'src/icon.png'])
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('build-html', ['build-js', 'build-css', 'build-extension'], function () {
-  // Inject references of every JS and CSS file in the deploy directory (excluding sw.js) into index.html.
-  var target = gulp.src('src/index.html');
-  var sources = gulp.src(['!' + deployDir + '/sw.js', deployDir + '/*.{js,css}',], {
-    read: false
-  });
-
-  return target.pipe(inject(sources, {
-    ignorePath: deployDir,
-    addRootSlash: false
-  }))
-      .pipe(injectVersion())
-      .pipe(minifyHtml())
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('build-sw', ['clean'], function () {
-  return gulp.src('./sw/sw.js')
-      .pipe(injectVersion())
-      .pipe(babel({
-        presets: ['es2015']
-      }))
-      .pipe(uglify())
-      .pipe(gulp.dest(deployDir));
 });
 
 gulp.task('serve', function () {
