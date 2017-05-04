@@ -5,6 +5,8 @@
     git add package.json
 ### Update the change log and stage it
     git add CHANGELOG.md
+### Build
+    gulp build
 ### Deploying
     gulp gh-deploy
 ### Tag
