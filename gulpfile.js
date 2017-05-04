@@ -1,4 +1,4 @@
-const deployDir = 'dist';
+const deployDir = './dist';
 
 const copyTheseFilesToDist = [
   './src/*.png'
@@ -38,7 +38,7 @@ gulp.task('vulcanize', ['clean'], function() {
   var jsFilter = filter(['**/*.js'], {restore: true});
   var htmlFilter = filter(['**/*.html'], {restore: true});
 
-  gulp.src('./src/index.html').pipe(vulcanize({
+  return gulp.src('./src/index.html').pipe(vulcanize({
     excludes: dontVulcanizeTheseFiles,
     stripComments: true,
     inlineCss: true,
@@ -77,8 +77,8 @@ gulp.task('lint', function () {
       .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('gh-deploy', ['vulcanize'], () => {
-  return gulp.src(deployDir + '/**/*')
+gulp.task('gh-deploy', ['default'], () => {
+  return gulp.src(deployDir+'/**')
     .pipe(ghPages({
       remote: "origin",
       branch: "gh-pages"
