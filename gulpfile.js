@@ -53,7 +53,12 @@ gulp.task('build-css', ['clean'], function () {
       .pipe(gulp.dest(deployDir));
 });
 
-gulp.task('build-html', ['build-js', 'build-css'], function () {
+gulp.task('build-extension', ['clean'], function () {
+  return gulp.src(['src/manifest.json', 'src/icon.png'])
+      .pipe(gulp.dest(deployDir));
+});
+
+gulp.task('build-html', ['build-js', 'build-css', 'build-extension'], function () {
   // Inject references of every JS and CSS file in the deploy directory (excluding sw.js) into index.html.
   var target = gulp.src('src/index.html');
   var sources = gulp.src(['!' + deployDir + '/sw.js', deployDir + '/*.{js,css}',], {
