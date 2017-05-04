@@ -4,9 +4,7 @@ const copyTheseFilesToDist = [
   './src/*.png'
 ];
 
-const dontVulcanizeTheseFiles = [
-  './src/sw/sw.js'
-];
+const dontVulcanizeTheseFiles = [];
 
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
