@@ -1,4 +1,4 @@
-const deployDir = './dist/';
+const deployDir = 'dist';
 
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
@@ -38,7 +38,7 @@ gulp.task('lint', function () {
 });
 
 gulp.task('gh-deploy', ['build'], () => {
-  return gulp.src(deployDir + '**/*')
+  return gulp.src(deployDir + '/**/*')
     .pipe(ghPages({
       remote: "origin",
       branch: "gh-pages"
