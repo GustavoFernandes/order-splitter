@@ -19,6 +19,7 @@
     "gulp-jshint": "^2.0.4",
     "gulp-minify-html": "^1.0.6",
     "gulp-uglify": "^2.0.1",
+    "gulp-vulcanize": "^6.1.0",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1"
   },
