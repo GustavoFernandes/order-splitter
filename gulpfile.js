@@ -5,7 +5,9 @@ var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
+var crisper = require('gulp-crisper');
 var debug = require('gulp-debug');
+var filter = require('gulp-filter');
 var ghPages = require('gulp-gh-pages');
 var gulp = require('gulp');
 var inject = require('gulp-inject');
@@ -14,8 +16,30 @@ var jshint = require('gulp-jshint');
 var minifyCss = require('gulp-clean-css');
 var minifyHtml = require('gulp-minify-html');
 var uglify = require('gulp-uglify');
+var vulcanize = require('gulp-vulcanize');
 
-gulp.task('default', ['lint']);
+var dontMinifyTheseFiles = [];
+
+gulp.task('default', ['clean'], function() {
+
+  var jsFilter = filter(['**/*.js'], {restore: true});
+  var htmlFilter = filter(['**/*.html']);
+
+  gulp.src('./src/index.html').pipe(vulcanize({
+    excludes: dontMinifyTheseFiles,
+    stripComments: true,
+    inlineCss: true,
+    inlineScripts: true
+  }))
+    .pipe(crisper())
+    .pipe(jsFilter)
+    .pipe(babel({
+      presets: ["es2015"],
+      compact: true
+    }))
+    .pipe(jsFilter.restore)
+    .pipe(gulp.dest(deployDir));
+});
 
 gulp.task('build', ['build-html', 'build-sw']);
 
