@@ -1,129 +1,102 @@
-function Order (fee, tax, tip, isTipPercentage) {
-  var subtotal = 0;
-  var costs = {};
-  var fee, tax, tip, isTipPercentage, feesPerPerson, taxPercent, tipPercent, total, subtotal, totals;
-
-  function setDefaults () {
-    if (!fee) {
-      console.log('Fee unset; defaulting to 0');
-      fee = 0;
+class Order {
+    constructor() {
+        this.people = new Map();
+        this.tip = 0;
+        this.tax = 0;
+        this.nonTaxedFees = 0;
+        this.taxedFees = 0;
+        this.isTipPercentage = false;
     }
 
-    if (!tax) {
-      console.log('Tax unset; defaulting to 0');
-      tax = 0;
+    withTip(tip, asPercentage=false) {
+        this.isTipPercentage = asPercentage;
+        if(this.isTipPercentage) {
+            this._tipPercentage = tip/100;
+        }
+        else {
+            this._tipDollars = tip;
+        }
+        return this;
     }
 
-    if (!tip) {
-      console.log('Tip unset; defaulting to 0');
-      tip = 0;
+    withNonTaxedFees(...fees) {
+        this.nonTaxedFees = fees.reduce((acc, val) => acc+val);
+        return this;
     }
-  }
 
-  var order = {
-    addItem: function (name, cost) {
-      // TODO combine this reserved words array with parseQueryStringInput function in parsers.js
-      if (['fee', 'tax', 'tip'].indexOf(name) > -1) {
-        throw "Name \"" + name + "\" is reserved. Do not use \"tax\", \"tip\", or \"fee\" as a name.";
-      }
-
-      if (costs[name] == null) {
-        costs[name] = 0;
-      }
-
-      costs[name] += cost;
-      subtotal += cost;
-    },
-
-    split: function () {
-      setDefaults();
-
-      if (isTipPercentage) {
-        tipPercent = tip / 100;
-        tip = tipPercent * subtotal;
-      } else {
-        tipPercent = tip / subtotal;
-      }
-
-      taxPercent = tax / subtotal;
-      feesPerPerson = fee / Object.keys(costs).length;
-      total = subtotal + tax + fee + tip;
-
-      totals = {};
-      for (var person in costs) {
-        totals[person] =
-            costs[person] + // cost of items
-            costs[person] * taxPercent + // tax on items
-            costs[person] * tipPercent + // tip on items
-            feesPerPerson;
-      }
-    },
-
-    set fee (x) {
-      fee = x;
-    },
-
-    set tax (x) {
-      tax = x;
-    },
-
-    set tip (x) {
-      tip = x;
-    },
-
-    set isTipPercentage (x) {
-      isTipPercentage = x;
-    },
-
-    get costs () {
-      return costs;
-    },
-
-    get fee () {
-      return fee;
-    },
-
-    get feesPerPerson () {
-      return feesPerPerson;
-    },
-
-    get tax () {
-      return tax;
-    },
-
-    get taxPercent () {
-      return taxPercent * 100;
-    },
-
-    get tip () {
-      return tip;
-    },
-
-    get tipPercent () {
-      return tipPercent * 100;
-    },
-
-    get isTipPercentage () {
-      return isTipPercentage;
-    },
-
-    get total () {
-      return total;
-    },
-
-    get subtotal () {
-      return subtotal;
-    },
-
-    get totals () {
-      return totals;
+    withTaxedFees(...fees) {
+        this.taxedFees = fees.reduce((acc, val) => acc+val);
+        return this;
     }
-  };
 
-  order.fee = fee;
-  order.tax = tax;
-  order.tip = tip;
-  order.isTipPercentage = isTipPercentage;
+    withTax(tax) {
+        this.tax = tax;
+        return this;
+    }
 
-  return order;
+    withPerson(name, price) {
+        let newPrice = price;
+        if(this.people.has(name)) {
+            newPrice += this.people.get(name);
+        }
+        this.people.set(name, newPrice);
+        return this;
+    }
+
+    get taxPercent() {
+        return this.tax/this.subTotal;
+    }
+
+    get taxPercentDisplay() {
+        return this.taxPercent*100;
+    }
+
+    get fee() {
+        return this.nonTaxedFees;
+    }
+
+    get tipPercent() {
+        if(this.isTipPercentage) {
+            return this._tipPercentage;
+        }
+        return this._tipDollars / this.subTotal;
+    }
+
+    get tipPercentDisplay() {
+        return this.tipPercent * 100;
+    }
+
+    get tipDollars() {
+        return this.tipPercent * this.subTotal;
+    }
+
+    get feesPerPerson() {
+        return this.fee/this.people.size;
+    }
+
+    get total() {
+        return this.subTotal + this.fee + this.tipDollars + this.tax;
+    }
+
+    split() {
+        let totals = new Map();
+        this.subTotal = 0;
+        for(let [name, price] of this.people.entries()) {
+            this.subTotal += price;
+        }
+        this.subTotal += this.taxedFees;
+        for(let [name, price] of this.people.entries()) {
+            let totalForPerson = price;
+            totalForPerson += price * this.taxPercent;
+            totalForPerson += price * this.tipPercent;
+            totalForPerson += this.feesPerPerson;
+            totals.set(name, totalForPerson);
+        }
+        this.totals = totals;
+        let totalPrice = Array.from(totals.values()).reduce((acc, val) => acc+val);
+        if(Math.round(totalPrice*100) != Math.round(this.total*100)) {
+            throw new Error("Everyone's share does not add up to total");
+        }
+        return this;
+    }
 }
