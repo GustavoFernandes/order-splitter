@@ -38,11 +38,11 @@ gulp.task('lint', function () {
 });
 
 gulp.task('gh-deploy', ['build'], () => {
-    return gulp.src(deployDir + '**/*')
-        .pipe(ghPages({
-            remote: "origin",
-            branch: "gh-pages"
-        }));
+  return gulp.src(deployDir + '**/*')
+    .pipe(ghPages({
+      remote: "origin",
+      branch: "gh-pages"
+    }));
 });
 
 gulp.task('build-js', ['clean'], function () {
