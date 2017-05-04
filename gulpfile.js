@@ -28,7 +28,9 @@ var vulcanize = require('gulp-vulcanize');
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-  return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist])
+    gulp.src(['sw/sw.js'])
+        .pipe(gulp.dest('./dist/'));
+  return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './src'})
     .pipe(debug('copied files'))
     .pipe(gulp.dest('./dist/'));
 });
