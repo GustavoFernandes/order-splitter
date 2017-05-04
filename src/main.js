@@ -71,14 +71,14 @@ function handleOrder (parserFunction) {
 function display (order) {
 
   var calculationsTable = '<table>' +
-      '<tr><td>Subtotal:</td><td>$' + prettifyNumber(order.subtotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
+      '<tr><td>Subtotal:</td><td>$' + prettifyNumber(order.subTotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
       '<tr><td>Tax:</td><td>$' + prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
       '<tr><td>Fees:</td><td>$' + prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
-      '<tr><td>Tip:</td><td>$' + prettifyNumber(order.tip) + '</td><td>(' + (order.isTipPercentage ? 'tip percent * subtotal' : 'user input') + ')</td></tr>' +
+      '<tr><td>Tip:</td><td>$' + prettifyNumber(order.tipDollars) + '</td><td>(' + (order.isTipPercentage ? 'tip percent * subtotal' : 'user input') + ')</td></tr>' +
       '<tr><td>Total:</td><td>$' + prettifyNumber(order.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
       '<tr><td>Fees per Person:</td><td>$' + prettifyNumber(order.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
-      '<tr><td>Tax (Percent):</td><td>' + order.taxPercent + '%</td><td>(tax / subtotal)</td></tr>' +
-      '<tr><td>Tip (Percent):</td><td>' + order.tipPercent + '%</td><td>(' + (order.isTipPercentage ? 'user input' : 'tip / subtotal') + ')</td></tr>' +
+      '<tr><td>Tax (Percent):</td><td>' + order.taxPercentDisplay + '%</td><td>(tax / subtotal)</td></tr>' +
+      '<tr><td>Tip (Percent):</td><td>' + order.tipPercentDisplay + '%</td><td>(' + (order.isTipPercentage ? 'user input' : 'tip / subtotal') + ')</td></tr>' +
       '</table>';
 
   var html =
@@ -87,7 +87,7 @@ function display (order) {
       makeBreakdownDisplay(order) + '<br>' +
       'Publish the following:<br>' +
       '<pre>' + makeTotalsDisplay(order.totals) + '</pre>' +
-      makeHyperlink(order.tax, order.fee, order.tip, order.costs);
+      makeHyperlink(order.tax, order.fee, order.tip, order.people);
 
   document.getElementById('result').innerHTML = html;
 }
@@ -124,8 +124,8 @@ function prettifyNumber (n) {
 function makeTotalsDisplay (totals) {
   // get length of longest name
   var longestName = -1;
-  for (var p in totals) {
-    longestName = Math.max(p.length, longestName);
+  for (var [person, price] of totals) {
+    longestName = Math.max(person.length, longestName);
   }
 
   // add 1 to longest name for a space after name
@@ -133,12 +133,12 @@ function makeTotalsDisplay (totals) {
 
   var output = '';
   var name;
-  for (p in totals) {
-    name = p;
-    for (var i = p.length; i < longestName; i++) {
+  for (let [person, price] of totals) {
+      let name = person;
+    for (var i = person.length; i < longestName; i++) {
       name += ' ';
     }
-    output += name + '$' + prettifyNumber(totals[p]) + '<br>';
+    output += name + '$' + prettifyNumber(price) + '<br>';
   }
 
   return output;
@@ -162,8 +162,8 @@ function makeHyperlink (tax, fee, tip, personItemCosts) {
 
   link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
 
-  for (var p in personItemCosts) {
-    link += '&' + encodeURIComponent(p) + '=' + prettifyNumber(personItemCosts[p]);
+  for (var [person, val] of personItemCosts) {
+    link += '&' + encodeURIComponent(person) + '=' + prettifyNumber(val);
   }
 
   return '<a href=' + link + '>' + link + '</a>';
@@ -177,14 +177,13 @@ function makeHyperlink (tax, fee, tip, personItemCosts) {
 function makeBreakdownDisplay (order) {
   var breakdown = '<table id="breakdown">';
   breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
-  for (var person in order.costs) {
-    var personItemCosts = prettifyNumber(order.costs[person]);
+  for (var [person, price] of order.people) {
     breakdown += '<tr><td>' + person + '</td><td>' +
-        personItemCosts + '</td><td> + ' + // item costs
-        personItemCosts + ' * ' + order.taxPercent / 100 + '</td><td> + ' + // taxes
-        personItemCosts + ' * ' + order.tipPercent / 100 + '</td><td> + ' + // tip
+        price + '</td><td> + ' + // item costs
+        price + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
+        price + ' * ' + order.tipPercent + '</td><td> + ' + // tip
         order.feesPerPerson + '</td><td> = ' +
-        prettifyNumber(order.totals[person]) + '</td></tr>';
+        prettifyNumber(order.totals.get(person)) + '</td></tr>';
   }
 
   breakdown += '</table>';
