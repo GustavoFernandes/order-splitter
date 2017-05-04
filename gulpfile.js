@@ -1,17 +1,18 @@
-var src = ['src/**', 'sw/**'];
-var deployDir = 'docs';
+const deployDir = './dist/';
 
-var gulp = require('gulp');
+var babel = require('gulp-babel');
+var browserSync = require('browser-sync');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
+var debug = require('gulp-debug');
+var ghPages = require('gulp-gh-pages');
+var gulp = require('gulp');
 var inject = require('gulp-inject');
-var minifyHtml = require('gulp-minify-html');
-var minifyCss = require('gulp-clean-css');
-var browserSync = require('browser-sync');
 var injectVersion = require('gulp-inject-version');
+var jshint = require('gulp-jshint');
+var minifyCss = require('gulp-clean-css');
+var minifyHtml = require('gulp-minify-html');
+var uglify = require('gulp-uglify');
 
 gulp.task('default', ['lint']);
 
@@ -34,6 +35,14 @@ gulp.task('lint', function () {
       }))
       .pipe(jshint.reporter('jshint-stylish'))
       .pipe(jshint.reporter('fail'));
+});
+
+gulp.task('gh-deploy', ['build'], () => {
+  return gulp.src(deployDir + '**/*')
+    .pipe(ghPages({
+      remote: "origin",
+      branch: "gh-pages"
+    }));
 });
 
 gulp.task('build-js', ['clean'], function () {

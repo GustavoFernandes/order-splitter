@@ -7,9 +7,8 @@
     git add CHANGELOG.md
 ### Build
     gulp build
-### Commit the build directory
-    git add -f docs
-    git commit -m 'Bump to version X.Y.Z'
+### Deploying
+    gulp gh-deploy
 ### Tag
     git tag -a vX.Y.Z -m 'Version X.Y.Z'
 ### Push
