@@ -39,7 +39,6 @@ gulp.task('lint', function () {
 
 gulp.task('gh-deploy', ['build'], () => {
     return gulp.src(deployDir + '**/*')
-        .pipe(debug('hello'))
         .pipe(ghPages({
             remote: "origin",
             branch: "gh-pages"
