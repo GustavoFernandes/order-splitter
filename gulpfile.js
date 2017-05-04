@@ -1,4 +1,5 @@
 const deployDir = 'dist';
+const srcList = ['src/**', 'sw/**'];
 
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
@@ -24,7 +25,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  var filesToLint = src.map(path => path + '/*.js');
+  var filesToLint = srcList.map(path => path + '/*.js');
   filesToLint.push('gulpfile.js');
 
   return gulp.src(filesToLint)
