@@ -61,6 +61,8 @@ gulp.task('vulcanize', ['clean'], function() {
     .pipe(gulp.dest(deployDir));
 });
 
+gulp.task('build', ['build-html', 'build-sw']);
+
 gulp.task('clean', function () {
   return gulp.src(deployDir)
       .pipe(clean());
@@ -77,7 +79,7 @@ gulp.task('lint', function () {
       .pipe(jshint.reporter('fail'));
 });
 
-gulp.task('gh-deploy', ['vulcanize'], () => {
+gulp.task('gh-deploy', ['build'], () => {
   return gulp.src(deployDir + '/**/*')
     .pipe(ghPages({
       remote: "origin",
