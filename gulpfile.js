@@ -1,6 +1,14 @@
 const deployDir = 'dist';
 const srcList = ['src/**', 'sw/**'];
 
+const copyTheseFilesToDist = [
+  './src/*.png'
+];
+
+const dontVulcanizeTheseFiles = [
+  './src/sw/*.js'
+];
+
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
 var clean = require('gulp-clean');
@@ -18,26 +26,39 @@ var minifyHtml = require('gulp-minify-html');
 var uglify = require('gulp-uglify');
 var vulcanize = require('gulp-vulcanize');
 
-var dontMinifyTheseFiles = [];
+gulp.task('default', ['vulcanize', 'copy-files']);
 
-gulp.task('default', ['clean'], function() {
+gulp.task('copy-files', ['clean'], function() {
+  gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: "./src"})
+    .pipe(debug('copied files'))
+    .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('vulcanize', ['clean'], function() {
 
   var jsFilter = filter(['**/*.js'], {restore: true});
-  var htmlFilter = filter(['**/*.html']);
+  var htmlFilter = filter(['**/*.html'], {restore: true});
 
   gulp.src('./src/index.html').pipe(vulcanize({
-    excludes: dontMinifyTheseFiles,
+    excludes: dontVulcanizeTheseFiles,
     stripComments: true,
     inlineCss: true,
     inlineScripts: true
   }))
     .pipe(crisper())
+
+    .pipe(htmlFilter)
+    .pipe(minifyHtml())
+    .pipe(htmlFilter.restore)
+
     .pipe(jsFilter)
     .pipe(babel({
       presets: ["es2015"],
       compact: true
     }))
     .pipe(jsFilter.restore)
+
+    .pipe(injectVersion())
     .pipe(gulp.dest(deployDir));
 });
 
