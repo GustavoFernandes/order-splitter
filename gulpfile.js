@@ -94,3 +94,13 @@ gulp.task('serve', function () {
   });
   gulp.watch(['./src/*'], browserSync.reload);
 });
+
+gulp.task('serve-dist', ['default'], function() {
+  browserSync({
+    server: {
+      baseDir: './dist/'
+    },
+    notify: false
+  });
+  gulp.watch(['./src/*'], ['default', browserSync.reload]);
+});
