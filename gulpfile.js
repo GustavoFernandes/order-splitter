@@ -1,10 +1,13 @@
 const deployDir = './dist';
 
 const copyTheseFilesToDist = [
+  './src/*.ico',
   './src/*.png'
 ];
 
-const dontVulcanizeTheseFiles = [];
+const dontVulcanizeTheseFiles = [
+  './src/sw.js'
+];
 
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
@@ -26,8 +29,6 @@ var vulcanize = require('gulp-vulcanize');
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-    gulp.src(['sw/sw.js'])
-        .pipe(gulp.dest('./dist/'));
   return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './src'})
     .pipe(debug('copied files'))
     .pipe(gulp.dest('./dist/'));
@@ -93,4 +94,14 @@ gulp.task('serve', function () {
     notify: false
   });
   gulp.watch(['./src/*'], browserSync.reload);
+});
+
+gulp.task('serve-dist', ['default'], function() {
+  browserSync({
+    server: {
+      baseDir: './dist/'
+    },
+    notify: false
+  });
+  gulp.watch(['./src/*'], ['default', browserSync.reload]);
 });
