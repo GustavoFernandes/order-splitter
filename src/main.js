@@ -1,9 +1,15 @@
 window.onload = init;
-    window.addEventListener("message", event => {
+window.addEventListener("message", event => {
+    if(event.data !== "parseDom") {
         handleOrder(() => event.data);
-    });
+    }
+});
+function requestOrder(e) {
+    window.postMessage("parseDom", "*");
+}
 
 function init () {
+    document.getElementById("parseDom").addEventListener("click", requestOrder);
   document.getElementById("split").addEventListener("click", onSplitButtonClick);
   document.getElementById("percentageCheckbox").addEventListener("click", onPercentageCheckboxClick);
   // check for URL query parameters

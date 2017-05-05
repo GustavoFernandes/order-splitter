@@ -99,4 +99,25 @@ class Order {
         }
         return this;
     }
+
+    toJSON() {
+        let ret = {};
+        ret.people = Array.from(this.people);
+        ret.tip = this.tip;
+        ret.tax = this.tax;
+        ret.nonTaxedFees = this.nonTaxedFees;
+        ret.taxedFees = this.taxedFees;
+        ret.isTipPercentage = this.isTipPercentage;
+        return ret;
+    }
+    
+    static fromJSON(json) {
+        let order = new Order();
+        order.people = new Map(json.people);
+        order.withTip(json.tip, json.isTipPercentage)
+            .withTax(json.tax)
+            .withNonTaxedFees(json.nonTaxedFees)
+            .withTaxedFees(json.taxedFees);
+        return order.split();
+    }
 }
