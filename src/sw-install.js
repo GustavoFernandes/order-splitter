@@ -1,5 +1,6 @@
 (function() {
-  if (location.hostname === 'localhost') {
+  let queryParams = new Map(location.search.slice(1).split("&").map(t=>t.split("=")));
+  if (location.hostname === 'localhost' && queryParams.get("sw") !== "test") {
     console.log('service worker disabled on localhost');
     return;
   }
