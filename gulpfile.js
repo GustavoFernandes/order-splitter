@@ -4,7 +4,9 @@ const copyTheseFilesToDist = [
   './src/*.png'
 ];
 
-const dontVulcanizeTheseFiles = [];
+const dontVulcanizeTheseFiles = [
+  './src/sw.js'
+];
 
 var babel = require('gulp-babel');
 var browserSync = require('browser-sync');
@@ -26,8 +28,6 @@ var vulcanize = require('gulp-vulcanize');
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-    gulp.src(['sw/sw.js'])
-        .pipe(gulp.dest('./dist/'));
   return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './src'})
     .pipe(debug('copied files'))
     .pipe(gulp.dest('./dist/'));
