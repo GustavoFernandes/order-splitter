@@ -1,6 +1,7 @@
 const deployDir = './dist';
 
 const copyTheseFilesToDist = [
+  './src/*.ico',
   './src/*.png'
 ];
 
