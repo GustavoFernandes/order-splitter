@@ -15,11 +15,11 @@
     },
     {
       "matches": ["*://orderup.com/orders/*"],
-      "js": ["./order.js"],
+      "js": ["./common/order.js"],
       "run_at": "document_start"
     }
   ],
-  "web_accessible_resources": ["./order.js"],
+  "web_accessible_resources": ["./common/order.js"],
   "permissions": [
     "activeTab"
   ]
