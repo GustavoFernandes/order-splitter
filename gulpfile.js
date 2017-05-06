@@ -1,12 +1,12 @@
 const deployDir = './dist';
 
 const copyTheseFilesToDist = [
-  './src/*.ico',
-  './src/*.png'
+  './webclient/*.ico',
+  './webclient/*.png'
 ];
 
 const dontVulcanizeTheseFiles = [
-  './src/sw.js'
+  './webclient/sw.js'
 ];
 
 var babel = require('gulp-babel');
@@ -29,7 +29,7 @@ var vulcanize = require('gulp-vulcanize');
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-  return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './src'})
+  return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './webclient'})
     .pipe(debug('copied files'))
     .pipe(gulp.dest('./dist/'));
 });
@@ -39,7 +39,7 @@ gulp.task('vulcanize', ['clean'], function() {
   var jsFilter = filter(['**/*.js'], {restore: true});
   var htmlFilter = filter(['**/*.html'], {restore: true});
 
-  return gulp.src('./src/index.html').pipe(vulcanize({
+  return gulp.src('./webclient/index.html').pipe(vulcanize({
     excludes: dontVulcanizeTheseFiles,
     stripComments: true,
     inlineCss: true,
@@ -68,7 +68,7 @@ gulp.task('clean', function () {
 });
 
 gulp.task('lint', function () {
-  return gulp.src(['gulpfile.js, ./src/**.js'])
+  return gulp.src(['gulpfile.js, ./webclient/**.js'])
       .pipe(jshint({
         eqeqeq: true,
         esversion: 6,
@@ -89,11 +89,11 @@ gulp.task('gh-deploy', ['default'], () => {
 gulp.task('serve', function () {
   browserSync({
     server: {
-      baseDir: './src/'
+      baseDir: './webclient/'
     },
     notify: false
   });
-  gulp.watch(['./src/*'], browserSync.reload);
+  gulp.watch(['./webclient/*'], browserSync.reload);
 });
 
 gulp.task('serve-dist', ['default'], function() {
@@ -103,5 +103,5 @@ gulp.task('serve-dist', ['default'], function() {
     },
     notify: false
   });
-  gulp.watch(['./src/*'], ['default', browserSync.reload]);
+  gulp.watch(['./webclient/*'], ['default', browserSync.reload]);
 });
