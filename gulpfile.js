@@ -17,12 +17,12 @@ var crisper = require('gulp-crisper');
 var debug = require('gulp-debug');
 var filter = require('gulp-filter');
 var ghPages = require('gulp-gh-pages');
+var git = require('git-rev-sync');
 var gulp = require('gulp');
-var inject = require('gulp-inject');
-var injectVersion = require('gulp-inject-version');
 var jshint = require('gulp-jshint');
 var minifyCss = require('gulp-clean-css');
 var minifyHtml = require('gulp-minify-html');
+var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
 var vulcanize = require('gulp-vulcanize');
 
@@ -38,6 +38,9 @@ gulp.task('vulcanize', ['clean'], function() {
 
   var jsFilter = filter(['**/*.js'], {restore: true});
   var htmlFilter = filter(['**/*.html'], {restore: true});
+  var version = JSON.parse(require('fs').readFileSync('./package.json')).version;
+  var gitsha = git.short();
+  var timestamp = "" + new Date();
 
   return gulp.src('./webclient/index.html').pipe(vulcanize({
     excludes: dontVulcanizeTheseFiles,
@@ -58,7 +61,9 @@ gulp.task('vulcanize', ['clean'], function() {
     }))
     .pipe(jsFilter.restore)
 
-    .pipe(injectVersion())
+    .pipe(replace("INSERT_VERSION", version))
+    .pipe(replace("INSERT_SHA", gitsha))
+    .pipe(replace("INSERT_BUILD_TIME", timestamp))
     .pipe(gulp.dest(deployDir));
 });
 
