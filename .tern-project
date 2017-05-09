@@ -3,7 +3,8 @@
     "browser"
   ],
   "loadEagerly": [
-    "./src/*.js"
+    "!node_modules",
+    "./**/*.js"
   ]
 }
 
