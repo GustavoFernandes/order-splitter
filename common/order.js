@@ -95,7 +95,7 @@ class Order {
         this.totals = totals;
         let totalPrice = Array.from(totals.values()).reduce((acc, val) => acc+val);
         if(Math.round(totalPrice*100) != Math.round(this.total*100)) {
-            throw new Error("Everyone's share does not add up to total");
+            throw new Error('Everyone\'s share does not add up to total');
         }
         return this;
     }
