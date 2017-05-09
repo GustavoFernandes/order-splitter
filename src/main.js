@@ -1,4 +1,7 @@
 window.onload = init;
+    window.addEventListener("message", event => {
+        handleOrder(() => event.data);
+    });
 
 function init () {
   document.getElementById("split").addEventListener("click", onSplitButtonClick);
