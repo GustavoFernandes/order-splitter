@@ -1,15 +1,17 @@
 var port = chrome.runtime.connect();
-
+sendOrder();
 window.addEventListener("message", e => {
-    if(e.data.isHere) {
+    if(e.data !== "parseDom") {
         return;
     }
-    //port.postMessage(parseOrderUpDom());
-    let order =  parseOrderUpDom();
-    order.isHere = true;
-    //window.postMessage(order, "*");
-    alert(JSON.stringify(order));
+    sendOrder();
 });
+
+function sendOrder() {
+    let order = parseOrderUpDom();
+    order.isHere = true;
+    window.postMessage(order, "*");
+}
 
 function parseOrderUpDom() {
     let table = window.document.querySelector("#order-confirmation-page > tbody");

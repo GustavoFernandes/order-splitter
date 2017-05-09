@@ -2,18 +2,13 @@
 	<head>
 		<title>Order Splitter</title>
 		<meta charset="UTF-8">
-		<!-- inject:js -->
-		<script src="main.js"></script>
-		<script src="order.js"></script>
-		<script src="parsers.js"></script>
-		<script src="sw-install.js"></script>
-		<!-- endinject -->
-		<!-- inject:css -->
-		<link rel="stylesheet" href="styles.css">
-		<!-- endinject -->
+		<script src="common/main.js"></script>
+		<script src="common/order.js"></script>
+		<script src="common/parsers.js"></script>
 	</head>
 	<body>
 		<div align="right">%%GULP_INJECT_VERSION%%</div>
+    <h1>This is the Chrome Extension</h1>
 		<table>
 			<tr>
 				<td>Order:</td>
@@ -43,6 +38,7 @@
 		Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
 		<input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
 		<button id="split">Split</button>
+		<button id="parseDom">Parse</button>
 		<p id="result"></p>
 	</body>
 </html>
