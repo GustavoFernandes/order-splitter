@@ -22,7 +22,6 @@ var ghPages = require('gulp-gh-pages');
 var git = require('git-rev-sync');
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
-var jshint = require('gulp-jshint');
 var minifyCss = require('gulp-clean-css');
 var minifyHtml = require('gulp-minify-html');
 var replace = require('gulp-replace');

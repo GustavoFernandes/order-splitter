@@ -19,13 +19,10 @@
     "gulp-filter": "^5.0.0",
     "gulp-gh-pages": "^0.5.4",
     "gulp-if": "^2.0.2",
-    "gulp-jshint": "^2.0.4",
     "gulp-minify-html": "^1.0.6",
     "gulp-replace": "^0.5.4",
     "gulp-uglify": "^2.0.1",
-    "gulp-vulcanize": "^6.1.0",
-    "jshint": "^2.9.4",
-    "jshint-stylish": "^2.2.1"
+    "gulp-vulcanize": "^6.1.0"
   },
   "repository": {
     "type": "git",
