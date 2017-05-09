@@ -1,49 +1,50 @@
 window.onload = init;
-window.addEventListener("message", event => {
-    if(event.data !== "parseDom") {
+window.addEventListener('message', event => {
+    if(event.data !== 'parseDom') {
         handleOrder(() => event.data);
     }
 });
+
 function requestOrder(e) {
-    window.postMessage("parseDom", "*");
+    window.postMessage('parseDom', '*');
 }
 
 function init () {
-    document.getElementById("parseDom").addEventListener("click", requestOrder);
-  document.getElementById("split").addEventListener("click", onSplitButtonClick);
-  document.getElementById("percentageCheckbox").addEventListener("click", onPercentageCheckboxClick);
+    document.getElementById('parseDom').addEventListener('click', requestOrder);
+    document.getElementById('split').addEventListener('click', onSplitButtonClick);
+    document.getElementById('percentageCheckbox').addEventListener('click', onPercentageCheckboxClick);
   // check for URL query parameters
-  if (window.location.search) {
-    var queryString = window.location.search.substring(1); // remove prefixing '?'
-    handleOrder(function () {
-      return parseQueryStringInput(queryString);
-    });
-  }
+    if (window.location.search) {
+        var queryString = window.location.search.substring(1); // remove prefixing '?'
+        handleOrder(function () {
+            return parseQueryStringInput(queryString);
+        });
+    }
 
-  loadPreferences();
+    loadPreferences();
 }
 
 /**
  * Loads user preferences from localStorage.
  */
 function loadPreferences () {
-  if (Storage) {
-    if (localStorage.getItem('isTipPercentage') === 'false') {
+    if (Storage) {
+        if (localStorage.getItem('isTipPercentage') === 'false') {
       // tip is a percentage by default, update if user prefs is 'false'
-      updateTipComponents(false);
-      document.getElementById('percentageCheckbox').checked = false;
+            updateTipComponents(false);
+            document.getElementById('percentageCheckbox').checked = false;
+        }
     }
-  }
 }
 
 function onPercentageCheckboxClick () {
-  var isTipPercentage = document.getElementById('percentageCheckbox').checked;
-  updateTipComponents(isTipPercentage);
+    var isTipPercentage = document.getElementById('percentageCheckbox').checked;
+    updateTipComponents(isTipPercentage);
 
   // save user preference to localStorage
-  if (Storage) {
-    localStorage.setItem('isTipPercentage', isTipPercentage);
-  }
+    if (Storage) {
+        localStorage.setItem('isTipPercentage', isTipPercentage);
+    }
 }
 
 /**
@@ -51,36 +52,36 @@ function onPercentageCheckboxClick () {
  * @param {boolean} isTipPercentage
  */
 function updateTipComponents (isTipPercentage) {
-  document.getElementById('fixedSpan').hidden = isTipPercentage;
-  document.getElementById('percentageSpan').hidden = !isTipPercentage;
+    document.getElementById('fixedSpan').hidden = isTipPercentage;
+    document.getElementById('percentageSpan').hidden = !isTipPercentage;
 }
 
 function onSplitButtonClick () {
-  var text = document.getElementById('textarea').value;
-  var tax = Number(document.getElementById('taxes').value);
-  var fee = Number(document.getElementById('fees').value);
-  var tip = Number(document.getElementById('tip').value);
-  var isTipPercentage = document.getElementById('percentageCheckbox').checked;
+    var text = document.getElementById('textarea').value;
+    var tax = Number(document.getElementById('taxes').value);
+    var fee = Number(document.getElementById('fees').value);
+    var tip = Number(document.getElementById('tip').value);
+    var isTipPercentage = document.getElementById('percentageCheckbox').checked;
 
-  handleOrder(function () {
-    return parseOrderUpInput(text, fee, tax, tip, isTipPercentage);
-  });
+    handleOrder(function () {
+        return parseOrderUpInput(text, fee, tax, tip, isTipPercentage);
+    });
 }
 
 function handleOrder (parserFunction) {
-  try {
-    var order = parserFunction();
-    order.split();
-    display(order);
-  } catch (error) {
-    alert(error);
-    console.error(error);
-  }
+    try {
+        var order = parserFunction();
+        order.split();
+        display(order);
+    } catch (error) {
+        alert(error);
+        console.error(error);
+    }
 }
 
 function display (order) {
 
-  var calculationsTable = '<table>' +
+    var calculationsTable = '<table>' +
       '<tr><td>Subtotal:</td><td>$' + prettifyNumber(order.subTotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
       '<tr><td>Tax:</td><td>$' + prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
       '<tr><td>Fees:</td><td>$' + prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
@@ -91,7 +92,7 @@ function display (order) {
       '<tr><td>Tip (Percent):</td><td>' + order.tipPercentDisplay + '%</td><td>(' + (order.isTipPercentage ? 'user input' : 'tip / subtotal') + ')</td></tr>' +
       '</table>';
 
-  var html =
+    var html =
       '<hr>' +
       calculationsTable + '<br>' +
       makeBreakdownDisplay(order) + '<br>' +
@@ -99,7 +100,7 @@ function display (order) {
       '<pre>' + makeTotalsDisplay(order.totals) + '</pre>' +
       makeHyperlink(order.tax, order.fee, order.tip, order.people);
 
-  document.getElementById('result').innerHTML = html;
+    document.getElementById('result').innerHTML = html;
 }
 
 /**
@@ -110,20 +111,20 @@ function display (order) {
  * @returns {string} A string of a number rounded and padded to 2 decimal places
  */
 function prettifyNumber (n) {
-  n = Math.round(n * 100) / 100; // round to 2 decimal places
+    n = Math.round(n * 100) / 100; // round to 2 decimal places
 
   // pad to 2 decimal places if necessary
-  var s = n.toString();
+    var s = n.toString();
 
-  if (s.indexOf('.') === -1) {
-    s += '.';
-  }
+    if (s.indexOf('.') === -1) {
+        s += '.';
+    }
 
-  while (s.length < s.indexOf('.') + 3) {
-    s += '0';
-  }
+    while (s.length < s.indexOf('.') + 3) {
+        s += '0';
+    }
 
-  return s;
+    return s;
 }
 
 /**
@@ -133,25 +134,25 @@ function prettifyNumber (n) {
  */
 function makeTotalsDisplay (totals) {
   // get length of longest name
-  var longestName = -1;
-  for (var [person, price] of totals) {
-    longestName = Math.max(person.length, longestName);
-  }
+    var longestName = -1;
+    for (var [person, price] of totals) {
+        longestName = Math.max(person.length, longestName);
+    }
 
   // add 1 to longest name for a space after name
-  longestName += 1;
+    longestName += 1;
 
-  var output = '';
-  var name;
-  for (let [person, price] of totals) {
-      let name = person;
-    for (var i = person.length; i < longestName; i++) {
-      name += ' ';
+    var output = '';
+    var name;
+    for (let [person, price] of totals) {
+        let name = person;
+        for (var i = person.length; i < longestName; i++) {
+            name += ' ';
+        }
+        output += name + '$' + prettifyNumber(price) + '<br>';
     }
-    output += name + '$' + prettifyNumber(price) + '<br>';
-  }
 
-  return output;
+    return output;
 }
 
 /**
@@ -163,20 +164,20 @@ function makeTotalsDisplay (totals) {
  * @return {string} The hyperlink to this order
  */
 function makeHyperlink (tax, fee, tip, personItemCosts) {
-  var link = window.location.origin + window.location.pathname;
-  if (link.indexOf('index.html') === -1) {
-    link += 'index.html';
-  }
+    var link = window.location.origin + window.location.pathname;
+    if (link.indexOf('index.html') === -1) {
+        link += 'index.html';
+    }
 
-  if (tip !== 0) tip = prettifyNumber(tip);
+    if (tip !== 0) tip = prettifyNumber(tip);
 
-  link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
+    link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
 
-  for (var [person, val] of personItemCosts) {
-    link += '&' + encodeURIComponent(person) + '=' + prettifyNumber(val);
-  }
+    for (var [person, val] of personItemCosts) {
+        link += '&' + encodeURIComponent(person) + '=' + prettifyNumber(val);
+    }
 
-  return '<a href=' + link + '>' + link + '</a>';
+    return '<a href=' + link + '>' + link + '</a>';
 }
 
 /**
@@ -185,17 +186,17 @@ function makeHyperlink (tax, fee, tip, personItemCosts) {
  * @returns {string} A view of the Order breakdown
  */
 function makeBreakdownDisplay (order) {
-  var breakdown = '<table id="breakdown">';
-  breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
-  for (var [person, price] of order.people) {
-    breakdown += '<tr><td>' + person + '</td><td>' +
+    var breakdown = '<table id="breakdown">';
+    breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
+    for (var [person, price] of order.people) {
+        breakdown += '<tr><td>' + person + '</td><td>' +
         price + '</td><td> + ' + // item costs
         price + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
         price + ' * ' + order.tipPercent + '</td><td> + ' + // tip
         order.feesPerPerson + '</td><td> = ' +
         prettifyNumber(order.totals.get(person)) + '</td></tr>';
-  }
+    }
 
-  breakdown += '</table>';
-  return breakdown;
+    breakdown += '</table>';
+    return breakdown;
 }
