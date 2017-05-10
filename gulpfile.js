@@ -2,6 +2,7 @@ const deployDir = './dist';
 
 const copyTheseFilesToDist = [
     './webclient/*.ico',
+    './webclient/manifest.json',
     './webclient/*.png'
 ];
 

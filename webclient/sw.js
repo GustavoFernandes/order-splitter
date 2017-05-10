@@ -1,5 +1,9 @@
 let CACHE_NAME = 'order-splitter-cache-%%GULP_INJECT_VERSION%%';
-let urlsToCache = ['index.html', 'index.js'].map(f => './'+f);
+let urlsToCache = [
+    'index.html', 
+    'index.js',
+    'favicon.ico'
+].map(f => './'+f);
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
