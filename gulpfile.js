@@ -2,8 +2,9 @@ const deployDir = './dist';
 
 const copyTheseFilesToDist = [
     './webclient/*.ico',
-    './webclient/manifest.json',
-    './webclient/*.png'
+    './webclient/*.png',
+    './webclient/common/app-icon/*',
+    './webclient/manifest.json'
 ];
 
 const dontVulcanizeTheseFiles = [
