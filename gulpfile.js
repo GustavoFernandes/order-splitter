@@ -4,11 +4,13 @@ const copyTheseFilesToDist = [
     './webclient/*.ico',
     './webclient/*.png',
     './webclient/common/app-icon/*',
-    './webclient/manifest.json'
+    './webclient/manifest.json',
+    './webclient/data/*'
 ];
 
 const dontVulcanizeTheseFiles = [
-    './webclient/sw.js'
+    './webclient/sw.js',
+    './webclient/common/bower_components/webcomponentsjs/custom-elements-es5-adapter.js'
 ];
 
 var babel = require('gulp-babel');
@@ -52,17 +54,27 @@ gulp.task('vulcanize', ['clean'], function() {
         inlineCss: true,
         inlineScripts: true
     }))
-    .pipe(crisper())
+    .pipe(crisper({
+        scriptInHead: false
+    }))
 
     .pipe(htmlFilter)
     .pipe(minifyHtml())
+
     .pipe(htmlFilter.restore)
 
     .pipe(jsFilter)
     .pipe(babel({
         presets: ['es2015'],
+        plugins: [
+            'async-to-promises'
+        ],
+        ignore: [
+            '*custom-elements-es5-adapter.js'
+        ],
         compact: true
     }))
+
     .pipe(jsFilter.restore)
 
     .pipe(replace('INSERT_VERSION', version))
