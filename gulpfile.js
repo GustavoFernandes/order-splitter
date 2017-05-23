@@ -92,19 +92,25 @@ gulp.task('lint', function () {
     function isFixed(file) {
         return file.eslint != null && file.eslint.fixed;
     }
-    return gulp.src(['./**/*.js', '!./dist/**.js', '!./*/common/**.js', './node_modules/**'], {base: './'})
-      .pipe(eslint(eslintConfig))
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError())
-      .pipe(gulpif(isFixed, gulp.dest('.')));
+    return gulp.src([
+        './**/*.js', 
+        '!./dist/**.js', 
+        '!./*/common/**.js', 
+        '!./**/bower_components/**',
+        '!./node_modules/**'
+    ], {base: './'})
+        .pipe(eslint(eslintConfig))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+        .pipe(gulpif(isFixed, gulp.dest('.')));
 });
 
 gulp.task('gh-deploy', ['default'], () => {
     return gulp.src(deployDir+'/**')
-    .pipe(ghPages({
-        remote: 'origin',
-        branch: 'gh-pages'
-    }));
+        .pipe(ghPages({
+            remote: 'origin',
+            branch: 'gh-pages'
+        }));
 });
 
 gulp.task('serve', function () {
