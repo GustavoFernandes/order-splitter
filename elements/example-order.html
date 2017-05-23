@@ -1,0 +1,40 @@
+<link rel="import" href="../common/bower_components/polymer/polymer-element.html">
+<link rel="import" href="../common/bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="./common/orderData.html">
+
+<dom-module id="example-order">
+    <template strip-whitespace>
+        <dom-repeat items="[[orders]]">
+            <template>
+                <span>[[item]]</span>
+            </template>
+        </dom-repeat>
+        <order-data id="data"></order-data>
+    </template>
+</dom-module>
+
+<script>
+    class ExampleOrder extends Polymer.Element {
+        static get is() {
+            return "example-order";
+        }
+
+        static get properties() {
+            return {
+                orders: Array
+            };
+        }
+
+        ready() {
+            super.ready();
+            (new OrderData()).getData()
+                .then(orders => {
+                    this.orders = orders;
+                });
+        }
+
+    }
+
+window.customElements.define(ExampleOrder.is, ExampleOrder);
+
+</script>
