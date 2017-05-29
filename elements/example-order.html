@@ -1,14 +1,33 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../common/orderData.html">
 
 <dom-module id="example-order">
     <template strip-whitespace>
-        <dom-repeat items="[[orders]]">
-            <template>
-                <span>[[item]]</span>
-            </template>
-        </dom-repeat>
+        <style include="iron-flex iron-flex-alignment"></style>
+        <style>
+            .pointer {
+                cursor: pointer;
+            }
+        </style>
+        <div class="horizontal layout justified">
+            <div class="vertical layout">
+                <dom-repeat items="[[orderTypes]]">
+                    <template>
+                        <div class="pointer" on-click="_selectItem">[[item]]</div>
+                    </template>
+                </dom-repeat>
+            </div>
+            <div class="vertical layout">
+                <dom-repeat items="[[selectedOrder]]">
+                    <template>
+                        <span>[[item]]</span>
+                    </template>
+                </dom-repeat>
+            </div>
+            <array-selector id="selector" items="{{orders}}" selected="{{selectedOrder}}"></array-selector>
+        </div>
     </template>
 </dom-module>
 
@@ -20,18 +39,42 @@
 
         static get properties() {
             return {
-                orders: Array
+                orders: Array,
+                selectedOrder: Array,
+                orderTypes: Array
             };
+        }
+
+        _selectItem(e) {
+            this.$.selector.selectIndex(e.model.index);
+        }
+
+        getData() {
+            fetch("/data/exampleOrders.json")
+                .then(stream => stream.body.getReader().read())
+                .then(({value, done}) => this.parse(value))
+                .then(orders => {
+                    this.orderTypes = Array.from(orders.keys());
+                    this.orders = Array.from(orders.values());
+                    this.selectedOrder = this.orders[0];
+                });
+        }
+
+        parse(value) {
+            const string = value.reduce((acc, code) => acc += String.fromCharCode(code), "");
+            const json = JSON.parse(string);
+            let ret = new Map();
+            for(const orderType in json) {
+                const order = json[orderType];
+                ret.set(orderType, order.map(e=>"\n"+e+"\n"));
+            }
+            return ret;
         }
 
         ready() {
             super.ready();
-            (new OrderData()).getData()
-                .then(orders => {
-                    this.orders = orders;
-                });
+            this.getData();
         }
-
     }
 
 window.customElements.define(ExampleOrder.is, ExampleOrder);

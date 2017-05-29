@@ -13,6 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "^2.0.0"
+    "polymer": "^2.0.0",
+    "iron-flex-layout": "^2.0.0"
   }
 }

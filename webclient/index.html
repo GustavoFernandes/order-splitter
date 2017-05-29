@@ -29,6 +29,8 @@
 
         <script src="../bower_components/webcomponentsjs/custom-elements-es5-adapter.js"></script>
         <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        <!--
+        -->
 
         <script src="../common/main.js"></script>
         <script src="../common/order.js"></script>
@@ -39,28 +41,51 @@
 
         <link rel="import" href="../elements/example-order.html">
 
-
-
+        <style>
+            .wrapper {
+                display: grid;
+                grid-gap: 10px;
+                grid-template-columns: 500px;
+            }
+            .header {
+                grid-row-start: 1;
+                grid-row-end: 2;
+            }
+            .body {
+                grid-row-start: 2;
+                grid-row-end: 3;
+            }
+            .order-input {
+                grid-column-start: 1;
+                grid-column-end: 2;
+            }
+            .order-example {
+                grid-column-start: 2;
+                grid-column-end: 3;
+            }
+        </style>
     </head>
     <body>
         <div align="right">INSERT_VERSION</div>
         <div align="right">INSERT_SHA</div>
         <div align="right">INSERT_BUILD_TIME</div>
-        <table>
-            <tr>
-                <td>Order:</td>
-            </tr>
-            <tr>
-                <td><textarea id="textarea" rows="20" cols="60"></textarea></td>
-                <td>
-                    Example input:<br>
-                    (from OrderUp confirmation page)
-                    <pre>
+        <div class="wrapper">
+            <div class="order-input header">
+                Order:
+            </div>
+            <div class="order-input body">
+                <textarea id="textarea" rows="20" cols="60"></textarea>
+            </div>
+            <div class="order-example header">
+                Example input:<br>
+                (from OrderUp confirmation page)
+            </div>
+            <div class="order-example body">
+                <pre>
                     <example-order></example-order>
-                    </pre>
-                </td>
-            </tr>
-        </table>
+                </pre>
+            </div>
+        </div>
         Taxes: $<input id="taxes" type="number"><br>
         Fees: $<input id="fees" type="number"><br>
         Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>

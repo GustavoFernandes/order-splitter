@@ -1,15 +1,5 @@
-class OrderData {
-    getData() {
-        return fetch("/data/orderUp.json")
-        .then(stream => stream.body.getReader().read())
-        .then(({value, done}) => this.parse(value));
-    }
-
-    parse(value) {
-        const string = value.reduce((acc, code) => acc += String.fromCharCode(code), "");
-        return JSON.parse(string).map(e => "\n"+e+"\n");
-    }
+class OrderParser {
 
 }
 
-window.OrderData = OrderData;
+window.OrderParser = OrderParser;
