@@ -3,14 +3,17 @@ const deployDir = './dist';
 const copyTheseFilesToDist = [
     './webclient/*.ico',
     './webclient/*.png',
-    './webclient/common/app-icon/*',
-    './webclient/manifest.json',
-    './webclient/data/*'
+    './common/app-icon/*',
+    './webclient/manifest.json'
+];
+
+const orderData = [
+    './data/*'
 ];
 
 const dontVulcanizeTheseFiles = [
     './webclient/sw.js',
-    './webclient/common/bower_components/webcomponentsjs/custom-elements-es5-adapter.js'
+    './bower_components/webcomponentsjs/custom-elements-es5-adapter.js'
 ];
 
 var babel = require('gulp-babel');
@@ -35,9 +38,11 @@ var vulcanize = require('gulp-vulcanize');
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-    return gulp.src([...dontVulcanizeTheseFiles, ...copyTheseFilesToDist], {base: './webclient'})
-    .pipe(debug('copied files'))
-    .pipe(gulp.dest('./dist/'));
+    gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
+        .pipe(gulp.dest(deployDir));
+    return gulp.src([...copyTheseFilesToDist])
+        .pipe(debug('copied files'))
+        .pipe(gulp.dest(deployDir));
 });
 
 gulp.task('vulcanize', ['clean'], function() {
@@ -48,39 +53,40 @@ gulp.task('vulcanize', ['clean'], function() {
     var gitsha = git.short();
     var timestamp = '' + new Date();
 
-    return gulp.src('./webclient/index.html').pipe(vulcanize({
-        excludes: dontVulcanizeTheseFiles,
-        stripComments: true,
-        inlineCss: true,
-        inlineScripts: true
-    }))
-    .pipe(crisper({
-        scriptInHead: false
-    }))
+    return gulp.src('./webclient/index.html')
+        .pipe(vulcanize({
+            excludes: dontVulcanizeTheseFiles,
+            stripComments: true,
+            inlineCss: true,
+            inlineScripts: true
+        }))
+        .pipe(crisper({
+            scriptInHead: false
+        }))
 
-    .pipe(htmlFilter)
-    .pipe(minifyHtml())
+        .pipe(htmlFilter)
+        .pipe(minifyHtml())
 
-    .pipe(htmlFilter.restore)
+        .pipe(htmlFilter.restore)
 
-    .pipe(jsFilter)
-    .pipe(babel({
-        presets: ['es2015'],
-        plugins: [
-            'async-to-promises'
-        ],
-        ignore: [
-            '*custom-elements-es5-adapter.js'
-        ],
-        compact: true
-    }))
+        .pipe(jsFilter)
+        .pipe(babel({
+            presets: ['es2015'],
+            plugins: [
+                'async-to-promises'
+            ],
+            ignore: [
+                '*custom-elements-es5-adapter.js'
+            ],
+            compact: true
+        }))
 
-    .pipe(jsFilter.restore)
+        .pipe(jsFilter.restore)
 
-    .pipe(replace('INSERT_VERSION', version))
-    .pipe(replace('INSERT_SHA', gitsha))
-    .pipe(replace('INSERT_BUILD_TIME', timestamp))
-    .pipe(gulp.dest(deployDir));
+        .pipe(replace('INSERT_VERSION', version))
+        .pipe(replace('INSERT_SHA', gitsha))
+        .pipe(replace('INSERT_BUILD_TIME', timestamp))
+        .pipe(gulp.dest(deployDir));
 });
 
 gulp.task('clean', function () {
@@ -88,11 +94,24 @@ gulp.task('clean', function () {
       .pipe(clean());
 });
 
+const extDir = './ext-dist/';
+
+gulp.task('ext', ['clean-ext', 'default'], function() {
+    return gulp.src([deployDir+'/**', './chrome_extension/*', './common/order.js'])
+        .pipe(debug('extension files'))
+        .pipe(gulp.dest(extDir));
+});
+
+gulp.task('clean-ext', function() {
+    gulp.src(extDir)
+    .pipe(clean());
+});
+
 gulp.task('lint', function () {
     function isFixed(file) {
         return file.eslint != null && file.eslint.fixed;
     }
-    return gulp.src(['./**/*.js', '!./dist/**.js', '!./*/common/**.js', './node_modules/**'], {base: './'})
+    return gulp.src(['./**/*.js', '!./dist/**.js', '!./*/common/**.js', '!./node_modules/**', '!./bower_components'], {base: './'})
       .pipe(eslint(eslintConfig))
       .pipe(eslint.format())
       .pipe(eslint.failAfterError())
@@ -120,9 +139,13 @@ gulp.task('serve', function () {
 gulp.task('serve-dist', ['default'], function() {
     browserSync({
         server: {
-            baseDir: './dist/'
+            baseDir: deployDir
         },
         notify: false
     });
-    gulp.watch(['./webclient/*'], ['default', browserSync.reload]);
+    gulp.watch([
+        './webclient/*', 
+        './common/*',
+        './elements/*'
+    ], ['default', browserSync.reload]);
 });
