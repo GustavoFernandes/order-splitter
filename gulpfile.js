@@ -1,4 +1,5 @@
 const deployDir = './dist';
+let DEPLOY = true;
 
 const copyTheseFilesToDist = [
     './webclient/*.ico',
@@ -60,6 +61,7 @@ gulp.task('vulcanize', ['clean'], function() {
             inlineCss: true,
             inlineScripts: true
         }))
+        .pipe(gulpif(!DEPLOY, replace(/.*custom-elements-es5-adapter.*/g, '')))
         .pipe(crisper({
             scriptInHead: false
         }))
@@ -70,7 +72,7 @@ gulp.task('vulcanize', ['clean'], function() {
         .pipe(htmlFilter.restore)
 
         .pipe(jsFilter)
-        .pipe(babel({
+        .pipe(gulpif(DEPLOY, babel({
             presets: ['es2015'],
             plugins: [
                 'async-to-promises'
@@ -79,9 +81,7 @@ gulp.task('vulcanize', ['clean'], function() {
                 '*custom-elements-es5-adapter.js'
             ],
             compact: true
-        }))
-    /*
-        */
+        })))
 
         .pipe(jsFilter.restore)
 
@@ -134,17 +134,7 @@ gulp.task('gh-deploy', ['default'], () => {
         }));
 });
 
-gulp.task('serve', function () {
-    browserSync({
-        server: {
-            baseDir: './webclient/'
-        },
-        notify: false
-    });
-    gulp.watch(['./webclient/*'], browserSync.reload);
-});
-
-gulp.task('serve-dist', ['default'], function() {
+gulp.task('serve', ['switch-to-src', 'default'], function() {
     browserSync({
         server: {
             baseDir: deployDir
@@ -154,6 +144,11 @@ gulp.task('serve-dist', ['default'], function() {
     gulp.watch([
         './webclient/*', 
         './common/*',
-        './elements/*'
-    ], ['default', browserSync.reload]);
+        './elements/*',
+        './data/*'
+    ], ['switch-to-src', 'default', browserSync.reload]);
+});
+
+gulp.task('switch-to-src', function() {
+    DEPLOY = false;
 });
