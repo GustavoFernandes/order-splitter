@@ -1,6 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
 <link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
 
 <dom-module id="example-order">
     <template strip-whitespace>
@@ -9,18 +10,21 @@
             .pointer {
                 cursor: pointer;
             }
+            .padding-right {
+                padding-right: 20px;
+            }
         </style>
-        <div class="horizontal layout justified">
-            <div class="vertical layout">
+        <div class="horizontal layout">
+            <div class="padding-right vertical layout">
                 <dom-repeat items="[[orderTypes]]">
                     <template>
-                        <div class="pointer" on-click="_selectItem">[[item]]</div>
+                        <paper-item class="pointer" on-click="_selectItem">[[item]]</paper-item>
                     </template>
                 </dom-repeat>
             </div>
             <span>[[selectedOrder]]</span>
-            <array-selector id="selector" items="{{orders}}" selected="{{selectedOrder}}"></array-selector>
         </div>
+        <array-selector id="selector" items="{{orders}}" selected="{{selectedOrder}}"></array-selector>
     </template>
 </dom-module>
 
@@ -43,7 +47,9 @@
         }
 
         getData() {
-            fetch(window.location.href+"data/exampleOrders.json")
+            let root = window.location.origin;
+            root += window.location.pathname.replace("index.html", "");
+            fetch(root+"data/exampleOrders.json")
                 .then(stream => stream.body.getReader().read())
                 .then(({value, done}) => this.parse(value))
                 .then(orders => {
