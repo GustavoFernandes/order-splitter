@@ -5,7 +5,8 @@ const copyTheseFilesToDist = [
     './webclient/*.ico',
     './webclient/*.png',
     './common/app-icon/*',
-    './webclient/manifest.json'
+    './webclient/manifest.json',
+    './webclient/sw.js'
 ];
 
 const orderData = [
@@ -13,7 +14,6 @@ const orderData = [
 ];
 
 const dontVulcanizeTheseFiles = [
-    './webclient/sw.js',
     './bower_components/webcomponentsjs/custom-elements-es5-adapter.js'
 ];
 
@@ -126,7 +126,7 @@ gulp.task('lint', function () {
         .pipe(gulpif(isFixed, gulp.dest('.')));
 });
 
-gulp.task('gh-deploy', ['default'], () => {
+gulp.task('gh-deploy', ['switch-to-src','default'], () => {
     return gulp.src(deployDir+'/**')
         .pipe(ghPages({
             remote: 'origin',
