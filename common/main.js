@@ -1,9 +1,8 @@
 window.onload = init;
-window.addEventListener('message', event => {
-    if(event.data !== 'parseDom') {
-        handleOrder(() => event.data);
-    }
-});
+
+const orderUpParser = new OrderUpParser();
+const queryStringParser = new QueryStringParser();
+const csvParser = new CsvParser();
 
 function requestOrder(e) {
     window.postMessage('parseDom', '*');
@@ -16,11 +15,9 @@ function init () {
   // check for URL query parameters
     if (window.location.search) {
         var queryString = window.location.search.substring(1); // remove prefixing '?'
-        /*
         handleOrder(function () {
-            return parseQueryStringInput(queryString);
+            return queryStringParser.parse(queryString).split();
         });
-        */
     }
 
     loadPreferences();
@@ -66,14 +63,19 @@ function onSplitButtonClick () {
     var isTipPercentage = document.getElementById('percentageCheckbox').checked;
 
     handleOrder(function () {
-        return parseOrderUpInput(text, fee, tax, tip, isTipPercentage);
+        let order;
+        try {
+        order = orderUpParser.parse(text, fee, tax, tip, isTipPercentage).split();
+        } catch(e) {
+            order = csvParser.parse(text).split();
+        }
+        return order;
     });
 }
 
 function handleOrder (parserFunction) {
     try {
         var order = parserFunction();
-        order.split();
         display(order);
     } catch (error) {
         alert(error);
