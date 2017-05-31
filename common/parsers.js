@@ -88,8 +88,8 @@ class CsvParser {
         const lines = csv.split('\n');
         for(const line of lines) {
             if(line.trim() !== "") {
-                const [name, priceString] = line.split(',');
-                const price = Number(priceString.trim().replace('$',''));
+                const [name, ...priceStrings] = line.split(',');
+                const price = priceStrings.map(ps => Number(ps.trim().replace('$',''))).reduce((p,acc) => p+acc);
                 if(name === 'fee') {
                     order.withNonTaxedFees(price);
                 }
