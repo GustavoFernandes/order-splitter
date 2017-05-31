@@ -18,13 +18,7 @@
                     </template>
                 </dom-repeat>
             </div>
-            <div class="vertical layout">
-                <dom-repeat items="[[selectedOrder]]">
-                    <template>
-                        <span>[[item]]</span>
-                    </template>
-                </dom-repeat>
-            </div>
+            <span>[[selectedOrder]]</span>
             <array-selector id="selector" items="{{orders}}" selected="{{selectedOrder}}"></array-selector>
         </div>
     </template>
@@ -65,7 +59,7 @@
             let ret = new Map();
             for(const orderType in json) {
                 const order = json[orderType];
-                ret.set(orderType, order.map(e=>"\n"+e+"\n"));
+                ret.set(orderType, order);
             }
             return ret;
         }
