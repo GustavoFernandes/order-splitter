@@ -46,23 +46,8 @@
             .wrapper {
                 display: grid;
                 grid-gap: 10px;
-                grid-template-columns: 500px;
-            }
-            .header {
-                grid-row-start: 1;
-                grid-row-end: 2;
-            }
-            .body {
-                grid-row-start: 2;
-                grid-row-end: 3;
-            }
-            .order-input {
-                grid-column-start: 1;
-                grid-column-end: 2;
-            }
-            .order-example {
-                grid-column-start: 2;
-                grid-column-end: 3;
+                /*grid-template-columns: 500px;*/
+                grid-template-columns: repeat(auto-fill, minmax(200px, 500px));
             }
         </style>
     </head>
@@ -71,28 +56,32 @@
         <div align="right">INSERT_SHA</div>
         <div align="right">INSERT_BUILD_TIME</div>
         <div class="wrapper">
-            <div class="order-input header">
-                Order:
+            <div>
+                <div>
+                    Example input:<br>
+                    (from OrderUp confirmation page)
+                </div>
+                <div>
+                    <pre>
+                        <example-order></example-order>
+                    </pre>
+                </div>
             </div>
-            <div class="order-input body">
-                <textarea id="textarea" rows="20" cols="60"></textarea>
-            </div>
-            <div class="order-example header">
-                Example input:<br>
-                (from OrderUp confirmation page)
-            </div>
-            <div class="order-example body">
-                <pre>
-                    <example-order></example-order>
-                </pre>
+            <div>
+                <div class="order-input header">
+                    Order:
+                </div>
+                <div class="order-input body">
+                    <textarea id="textarea" rows="20" cols="60"></textarea>
+                </div>
+                Taxes: $<input id="taxes" type="number"><br>
+                Fees: $<input id="fees" type="number"><br>
+                Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
+                <input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
+                <button id="split">Split</button>
+                <button id="parseDom">Parse</button>
             </div>
         </div>
-        Taxes: $<input id="taxes" type="number"><br>
-        Fees: $<input id="fees" type="number"><br>
-        Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
-        <input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
-        <button id="split">Split</button>
-        <button id="parseDom">Parse</button>
         <p id="result"></p>
     </body>
 </html>
