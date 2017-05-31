@@ -36,12 +36,15 @@ var replace = require('gulp-replace');
 var uglify = require('gulp-uglify');
 var vulcanize = require('gulp-vulcanize');
 
+var version = JSON.parse(require('fs').readFileSync('./package.json')).version;
+
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
     gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
         .pipe(gulp.dest(deployDir));
     return gulp.src([...copyTheseFilesToDist])
+        .pipe(replace('INSERT_VERSION', version))
         .pipe(debug('copied files'))
         .pipe(gulp.dest(deployDir));
 });
@@ -50,7 +53,6 @@ gulp.task('vulcanize', ['clean'], function() {
 
     var jsFilter = filter(['**/*.js'], {restore: true});
     var htmlFilter = filter(['**/*.html'], {restore: true});
-    var version = JSON.parse(require('fs').readFileSync('./package.json')).version;
     var gitsha = git.short();
     var timestamp = '' + new Date();
 
