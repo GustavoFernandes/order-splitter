@@ -5,12 +5,12 @@
   "description": "This extension processes orders from orderup",
   "version": "0.5.2",
   "browser_action": {
-    "default_popup": "chrome-extension-index.html"
+    "default_popup": "index.html"
   },
   "icons": {
-    "16":  "./common/app-icon/ordersplitter16.png",
-    "32":  "./common/app-icon/ordersplitter32.png",
-    "128": "./common/app-icon/ordersplitter128.png"
+    "16":  "./ordersplitter16.png",
+    "32":  "./ordersplitter32.png",
+    "128": "./ordersplitter128.png"
   },
   "content_scripts": [
     {
@@ -19,11 +19,11 @@
     },
     {
       "matches": ["*://orderup.com/orders/*"],
-      "js": ["./common/order.js"],
+      "js": ["./order.js"],
       "run_at": "document_start"
     }
   ],
-  "web_accessible_resources": ["./common/order.js"],
+  "web_accessible_resources": ["./order.js"],
   "permissions": [
     "activeTab"
   ]

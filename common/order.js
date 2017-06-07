@@ -6,6 +6,8 @@ class Order {
         this.nonTaxedFees = 0;
         this.taxedFees = 0;
         this.isTipPercentage = false;
+        this._tipDollars = 0;
+        this._tipPercentage = 0;
     }
 
     withTip(tip, asPercentage=false) {

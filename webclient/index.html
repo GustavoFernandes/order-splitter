@@ -1,77 +1,87 @@
 <html>
-  <head>
-    <title>Order Splitter</title>
-    <meta charset="UTF-8">
+    <head>
+        <title>Order Splitter</title>
+        <meta charset="UTF-8">
 
-    <!-- Chrome for Android theme color -->
-    <meta name="theme-color" content="#11923B">
+        <!-- Chrome for Android theme color -->
+        <meta name="theme-color" content="#11923B">
 
-    <!-- Add to homescreen for Chrome on Android -->
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="PSK">
-    <link rel="icon" sizes="192x192" href="common/app-icon/ordersplitter192.png" asnyc>
+        <!-- Add to homescreen for Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="PSK">
+        <link rel="icon" sizes="192x192" href="ordersplitter192.png" asnyc>
 
-    <!-- chrome favicon -->
-    <link rel="icon" sizes="16x16" href="common/app-icon/ordersplitter16.png">
-    <!-- firefox favicon -->
-    <link rel="icon" sizes="32x32" href="common/app-icon/ordersplitter32.png">
+        <!-- chrome favicon -->
+        <link rel="icon" sizes="16x16" href="ordersplitter16.png">
+        <!-- firefox favicon -->
+        <link rel="icon" sizes="32x32" href="ordersplitter32.png">
 
-    <!-- Add to homescreen for Safari on iOS -->
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="Order Splitter">
-    <link rel="apple-touch-icon" href="common/app-icon/ordersplitter152.png" asnyc>
+        <!-- Add to homescreen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Order Splitter">
+        <link rel="apple-touch-icon" href="ordersplitter152.png" asnyc>
 
-    <!-- Tile color for Win8 -->
-    <meta name="msapplication-TileColor" content="#3372DF">
-    <!-- Tile icon for Win8 (144x144) -->
-    <meta name="msapplication-TileImage" content="common/app-icon/ordersplitter144.png" async>
+        <!-- Tile color for Win8 -->
+        <meta name="msapplication-TileColor" content="#3372DF">
+        <!-- Tile icon for Win8 (144x144) -->
+        <meta name="msapplication-TileImage" content="ordersplitter144.png" async>
 
+        <!--
+        <script src="../bower_components/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        -->
+        <script src="polyfills.js"></script>
 
-		<script src="common/main.js"></script>
-		<script src="common/order.js"></script>
-		<script src="common/parsers.js"></script>
-		<script src="sw-install.js"></script>
-		<link rel="stylesheet" href="styles.css">
-    <link rel="manifest" href="manifest.json">
+        <script src="../common/parsers.js"></script>
+        <script src="../common/main.js"></script>
+        <script src="../common/order.js"></script>
+        <script src="sw-install.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <link rel="manifest" href="manifest.json">
 
+        <link rel="import" href="../elements/example-order.html">
 
-
-	</head>
-	<body>
-		<div align="right">INSERT_VERSION</div>
-		<div align="right">INSERT_SHA</div>
-		<div align="right">INSERT_BUILD_TIME</div>
-		<table>
-			<tr>
-				<td>Order:</td>
-			</tr>
-			<tr>
-				<td><textarea id="textarea" rows="20" cols="60"></textarea></td>
-				<td>
-					Example input:<br>
-					(from OrderUp confirmation page)
-					<pre>
-1 	12 Nuggets - 	$4.39
-	Sauce: Ketchup
-	Label for:Alice
-
-2 	Tots - 	$1.99
-	Label for:Bob
-
-1 	6 Wings - 	$6.29
-	Wing Seasoning: Sweet Honey BBQ
-	Label for:Charlie
-					</pre>
-				</td>
-			</tr>
-		</table>
-		Taxes: $<input id="taxes" type="number"><br>
-		Fees: $<input id="fees" type="number"><br>
-		Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
-		<input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
-		<button id="split">Split</button>
-		<button id="parseDom">Parse</button>
-		<p id="result"></p>
-	</body>
+        <style>
+            .wrapper {
+                display: grid;
+                grid-gap: 10px;
+                /*grid-template-columns: 500px;*/
+                grid-template-columns: repeat(auto-fill, minmax(200px, 500px));
+            }
+        </style>
+    </head>
+    <body>
+        <div align="right">INSERT_VERSION</div>
+        <div align="right">INSERT_SHA</div>
+        <div align="right">INSERT_BUILD_TIME</div>
+        <div class="wrapper">
+            <div>
+                <div>
+                    Example input:<br>
+                    (from OrderUp confirmation page)
+                </div>
+                <div>
+                    <pre>
+                        <example-order></example-order>
+                    </pre>
+                </div>
+            </div>
+            <div>
+                <div class="order-input header">
+                    Order:
+                </div>
+                <div class="order-input body">
+                    <textarea id="textarea" rows="20" cols="60"></textarea>
+                </div>
+                Taxes: $<input id="taxes" type="number"><br>
+                Fees: $<input id="fees" type="number"><br>
+                Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
+                <input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
+                <button id="split">Split</button>
+                <button id="parseDom">Parse</button>
+            </div>
+        </div>
+        <p id="result"></p>
+    </body>
 </html>
