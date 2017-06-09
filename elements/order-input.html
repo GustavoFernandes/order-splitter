@@ -1,0 +1,121 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<dom-module id="order-input">
+    <template>
+        <style>
+            .hidden {
+                display: none;
+            }
+            paper-input {
+                /* display: inline-block; */
+                max-width: 100px;
+                --paper-input-container: { 
+                    padding: 0;
+                };
+            }
+            paper-checkbox {
+                margin-left: 10px;
+            }
+            #tipContainer {
+                display: flex;
+                align-items: flex-end;
+            }
+            span[slot="prefix"] {
+                padding-right: 2px;
+            }
+        </style>
+        <div>
+            <textarea id="textarea" rows="20" cols="60" placeholder="Paste order details here"></textarea>
+            <paper-input allowed-pattern="[0-9]" label="Taxes" id="tax">
+                <span slot="prefix">$</span>
+            </paper-input>
+            <paper-input allowed-pattern="[0-9]" label="Fees"  id="fee">
+                <span slot="prefix">$</span>
+            </paper-input>
+            <div id="tipContainer">
+            <paper-input allowed-pattern="[0-9]" label="Tip"   id="tip">
+                <span slot="prefix" class$="[[_computeTipDollarClass(usePercentForTip)]]">$</span>
+                <span slot="suffix" class$="[[_computeTipPercentClass(usePercentForTip)]]">%</span>
+            </paper-input>
+            <paper-checkbox checked="{{usePercentForTip}}" on-tap="_onCheckboxTap">Percentage</paper-checkbox>
+            </div>
+            <paper-button id="split" on-tap="_onSplitButtonTap">Split</paper-button>
+            <paper-button id="parseDom" disabled on-tap="_requestOrder">Parse dom? wut?</paper-button>
+        </div>
+    </template>
+    <script>
+        defineCustomElement('order-input', class extends Polymer.Element {
+            ready() {
+                super.ready();
+                this.usePercentForTip = JSON.parse(localStorage.getItem('usePercentForTip'));
+            }
+            _computeTipPercentClass() {
+                console.debug('_computeTipPercentClass()');
+                return this.usePercentForTip ? '' : 'hidden';
+            }
+            _computeTipDollarClass() {
+                console.debug('_computeTipDollarClass()');
+                return !this.usePercentForTip ? '' : 'hidden';
+            }
+            _onSplitButtonTap() {
+                var text = this.$.textarea.value;
+                var tax = this.$.tax.value;
+                var fee = Number(this.$.fee.value);
+                var tip = Number(this.$.tip.value);
+                var isTipPercentage = this.usePercentForTip;
+
+                handleOrder(function() {
+                    try {
+                        return orderUpParser.parse(text, fee, tax, tip, isTipPercentage).split();
+                    } catch(e) {
+                        console.error('OrderUp parser failed', e);
+                        console.log('trying csv parser');
+                        return csvParser.parse(text).split();
+                    }
+                });
+            }
+            _requestOrder() {
+                // this method makes no sense to me.
+                // can we delete it?
+                window.postMessage('parseDom', '*');
+            }
+            _onCheckboxTap() {
+                localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
+            }
+        });
+        function defineCustomElement(tag, elementClass) {
+            customElements.define(tag, class extends elementClass {
+                static get is() { return tag; }
+            });
+        }
+    </script>
+</dom-module>
+
+<dom-module id="picture-frame">
+
+  <template>
+    <!-- scoped CSS for this element -->
+    <style>
+      div {
+        display: inline-block;
+        background-color: #ccc;
+        border-radius: 8px;
+        padding: 4px;
+      }
+    </style>
+    <div>
+      <!-- any children are rendered here -->
+      <slot></slot>
+    </div>
+  </template>
+
+  <script>
+    class PictureFrame extends Polymer.Element {
+      static get is() { return "picture-frame"; }
+    }
+    customElements.define(PictureFrame.is, PictureFrame);
+  </script>
+
+</dom-module>

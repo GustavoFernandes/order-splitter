@@ -4,14 +4,7 @@ const orderUpParser = new OrderUpParser();
 const queryStringParser = new QueryStringParser();
 const csvParser = new CsvParser();
 
-function requestOrder(e) {
-    window.postMessage('parseDom', '*');
-}
-
 function init () {
-    document.getElementById('parseDom').addEventListener('click', requestOrder);
-    document.getElementById('split').addEventListener('click', onSplitButtonClick);
-    document.getElementById('percentageCheckbox').addEventListener('click', onPercentageCheckboxClick);
   // check for URL query parameters
     if (window.location.search) {
         var queryString = window.location.search.substring(1); // remove prefixing '?'
@@ -19,58 +12,6 @@ function init () {
             return queryStringParser.parse(queryString).split();
         });
     }
-
-    loadPreferences();
-}
-
-/**
- * Loads user preferences from localStorage.
- */
-function loadPreferences () {
-    if (Storage) {
-        if (localStorage.getItem('isTipPercentage') === 'false') {
-      // tip is a percentage by default, update if user prefs is 'false'
-            updateTipComponents(false);
-            document.getElementById('percentageCheckbox').checked = false;
-        }
-    }
-}
-
-function onPercentageCheckboxClick () {
-    var isTipPercentage = document.getElementById('percentageCheckbox').checked;
-    updateTipComponents(isTipPercentage);
-
-  // save user preference to localStorage
-    if (Storage) {
-        localStorage.setItem('isTipPercentage', isTipPercentage);
-    }
-}
-
-/**
- * Updates the tip components according to the tip being a percentage.
- * @param {boolean} isTipPercentage
- */
-function updateTipComponents (isTipPercentage) {
-    document.getElementById('fixedSpan').hidden = isTipPercentage;
-    document.getElementById('percentageSpan').hidden = !isTipPercentage;
-}
-
-function onSplitButtonClick () {
-    var text = document.getElementById('textarea').value;
-    var tax = Number(document.getElementById('taxes').value);
-    var fee = Number(document.getElementById('fees').value);
-    var tip = Number(document.getElementById('tip').value);
-    var isTipPercentage = document.getElementById('percentageCheckbox').checked;
-
-    handleOrder(function () {
-        let order;
-        try {
-        order = orderUpParser.parse(text, fee, tax, tip, isTipPercentage).split();
-        } catch(e) {
-            order = csvParser.parse(text).split();
-        }
-        return order;
-    });
 }
 
 function handleOrder (parserFunction) {

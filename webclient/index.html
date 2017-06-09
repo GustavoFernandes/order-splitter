@@ -41,6 +41,7 @@
         <link rel="manifest" href="manifest.json">
 
         <link rel="import" href="../elements/example-order.html">
+        <link rel="import" href="../elements/order-input.html">
 
         <style>
             .wrapper {
@@ -68,18 +69,7 @@
                 </div>
             </div>
             <div>
-                <div class="order-input header">
-                    Order:
-                </div>
-                <div class="order-input body">
-                    <textarea id="textarea" rows="20" cols="60"></textarea>
-                </div>
-                Taxes: $<input id="taxes" type="number"><br>
-                Fees: $<input id="fees" type="number"><br>
-                Tip: <span id="fixedSpan" hidden>$</span><input id="tip" type="number"><span id="percentageSpan">%</span>
-                <input id="percentageCheckbox" type="checkbox" checked>Percentage<br>
-                <button id="split">Split</button>
-                <button id="parseDom">Parse</button>
+                <order-input></order-input>
             </div>
         </div>
         <p id="result"></p>
