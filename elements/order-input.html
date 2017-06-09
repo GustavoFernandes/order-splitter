@@ -64,9 +64,9 @@
             }
             _onSplitButtonTap() {
                 var text = this.$.textarea.value;
-                var tax = Number(this.$.tax.value);
-                var fee = Number(this.$.fee.value);
-                var tip = Number(this.$.tip.value);
+                var tax = Number(this.$.tax.value || 0);
+                var fee = Number(this.$.fee.value || 0);
+                var tip = Number(this.$.tip.value || 0);
                 var isTipPercentage = this.usePercentForTip;
 
                 handleOrder(function() {

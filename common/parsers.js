@@ -44,7 +44,7 @@ class OrderUpParser {
      * @param {boolean} isTipPercentage - True if the tip is a percentage as opposed to a fixed value
      * @return {Order} An order parsed from the OrderUp.com confirmation summary
      */
-    parse(orderUpText, fee, tax, tip, isTipPercentage) {
+    parse(orderUpText, fee=0, tax=0, tip=0, isTipPercentage=false) {
         let order = new Order()
             .withNonTaxedFees(fee)
             .withTax(tax)
