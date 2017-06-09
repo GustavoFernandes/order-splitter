@@ -30,6 +30,7 @@ var ghPages = require('gulp-gh-pages');
 var git = require('git-rev-sync');
 var gulp = require('gulp');
 var gulpif = require('gulp-if');
+var merge = require('gulp-merge');
 var minifyCss = require('gulp-clean-css');
 var minifyHtml = require('gulp-minify-html');
 var replace = require('gulp-replace');
@@ -41,12 +42,14 @@ var version = JSON.parse(require('fs').readFileSync('./package.json')).version;
 gulp.task('default', ['vulcanize', 'copy-files']);
 
 gulp.task('copy-files', ['clean'], function() {
-    gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
-        .pipe(gulp.dest(deployDir));
-    return gulp.src([...copyTheseFilesToDist])
-        .pipe(replace('INSERT_VERSION', version))
-        .pipe(debug('copied files'))
-        .pipe(gulp.dest(deployDir));
+    return merge(
+        gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
+            .pipe(gulp.dest(deployDir)),
+        gulp.src([...copyTheseFilesToDist])
+            .pipe(replace('INSERT_VERSION', version))
+            .pipe(debug('copied files'))
+            .pipe(gulp.dest(deployDir))
+    );
 });
 
 gulp.task('vulcanize', ['clean'], function() {
@@ -107,8 +110,7 @@ gulp.task('ext', ['clean-ext', 'default'], function() {
 });
 
 gulp.task('clean-ext', function() {
-    gulp.src(extDir)
-    .pipe(clean());
+    return gulp.src(extDir).pipe(clean());
 });
 
 gulp.task('lint', function () {

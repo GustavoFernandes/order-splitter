@@ -20,6 +20,7 @@
     "gulp-filter": "^5.0.0",
     "gulp-gh-pages": "^0.5.4",
     "gulp-if": "^2.0.2",
+    "gulp-merge": "^0.1.1",
     "gulp-minify-html": "^1.0.6",
     "gulp-replace": "^0.5.4",
     "gulp-uglify": "^2.0.1",
@@ -34,5 +35,6 @@
   "bugs": {
     "url": "https://github.com/GustavoFernandes/order-splitter/issues"
   },
-  "homepage": "https://github.com/GustavoFernandes/order-splitter#readme"
+  "homepage": "https://github.com/GustavoFernandes/order-splitter#readme",
+  "dependencies": {}
 }
