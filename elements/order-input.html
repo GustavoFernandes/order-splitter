@@ -71,11 +71,11 @@
 
                 handleOrder(function() {
                     try {
-                        return orderUpParser.parse(text, fee, tax, tip, isTipPercentage).split();
+                        return new OrderUpParser().parse(text, fee, tax, tip, isTipPercentage).split();
                     } catch(e) {
                         console.error('OrderUp parser failed', e);
                         console.log('trying csv parser');
-                        return csvParser.parse(text).split();
+                        return new CsvParser().parse(text).split();
                     }
                 });
             }
