@@ -45,37 +45,29 @@ class OrderUpParser {
      * @return {Order} An order parsed from the OrderUp.com confirmation summary
      */
     parse(orderUpText, fee, tax, tip, isTipPercentage) {
-        // TODO: check if the number at the beginning of the line affects the item cost
-        // example: 2 Chicken $4.00
-        //   should the cost for the person be $4 or $8?
-
         let order = new Order()
             .withNonTaxedFees(fee)
             .withTax(tax)
             .withTip(tip, isTipPercentage);
-        var label = 'Label for:';
-        var itemCost = null;
-        var array = orderUpText.split('\n');
 
-        for (var i = 0; i < array.length; i++) {
-            var line = array[i].trim();
-            line = line.replace(/\s+/g, ' '); // replace all whitespace with single space
+        var lines = orderUpText.split('\n');
 
-            if (!itemCost) {
-                var dollarIndex = line.lastIndexOf('$');
-                if (dollarIndex > -1) {
-                    itemCost = Number(line.substring(dollarIndex + 1, line.length));
-                }
-                continue;
+        lines.reduce((lastItemCost, line) => {
+            let itemCostMatch, nameMatch;
+
+            if (itemCostMatch = line.match('.*\\$([0-9.]+)')) {
+                let itemCost = Number(itemCostMatch[1]);
+                return itemCost;
             }
 
-            var labelIndex = line.indexOf(label);
-            if (labelIndex > -1) {
-                var name = line.substring(labelIndex + label.length, line.length);
-                order.withPerson(name, itemCost);
-                itemCost = null;
+            if (nameMatch = line.match('.*Label for:(.*)')) {
+                let name = nameMatch[1];
+                order.withPerson(name, lastItemCost);
+                return;
             }
-        }
+
+            return lastItemCost;
+        }, null);
 
         return order;
     }
