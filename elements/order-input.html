@@ -55,11 +55,9 @@
                 this.usePercentForTip = JSON.parse(localStorage.getItem('usePercentForTip'));
             }
             _computeTipPercentClass() {
-                console.debug('_computeTipPercentClass()');
                 return this.usePercentForTip ? '' : 'hidden';
             }
             _computeTipDollarClass() {
-                console.debug('_computeTipDollarClass()');
                 return !this.usePercentForTip ? '' : 'hidden';
             }
             _onSplitButtonTap() {
