@@ -46,7 +46,7 @@ gulp.task('copy-files', ['clean'], function() {
         gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
             .pipe(gulp.dest(deployDir)),
         gulp.src([...copyTheseFilesToDist])
-            .pipe(replace('INSERT_VERSION', version))
+            .pipe(replace('INSERT_SHA', git.short()))
             .pipe(debug('copied files'))
             .pipe(gulp.dest(deployDir))
     );
@@ -56,8 +56,6 @@ gulp.task('vulcanize', ['clean'], function() {
 
     var jsFilter = filter(['**/*.js'], {restore: true});
     var htmlFilter = filter(['**/*.html'], {restore: true});
-    var gitsha = git.short();
-    var timestamp = '' + new Date();
 
     return gulp.src('./webclient/index.html')
         .pipe(vulcanize({
@@ -91,8 +89,8 @@ gulp.task('vulcanize', ['clean'], function() {
         .pipe(jsFilter.restore)
 
         .pipe(replace('INSERT_VERSION', version))
-        .pipe(replace('INSERT_SHA', gitsha))
-        .pipe(replace('INSERT_BUILD_TIME', timestamp))
+        .pipe(replace('INSERT_SHA', git.short()))
+        .pipe(replace('INSERT_BUILD_TIME', new Date().toLocaleString()))
         .pipe(gulp.dest(deployDir));
 });
 
