@@ -18,6 +18,7 @@
     "paper-item": "PolymerElements/paper-item#2.0",
     "paper-input": "^2.0.1",
     "paper-checkbox": "^2.0.0",
-    "paper-button": "^2.0.0"
+    "paper-button": "^2.0.0",
+    "paper-tooltip": "^2.0.0"
   }
 }
