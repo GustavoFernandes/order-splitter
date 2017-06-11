@@ -5,6 +5,12 @@ window.onload = function() {
         var order = new QueryStringParser().parse(queryString).split();
         handleOrder(order);
     }
+};
+
+function defineCustomElement(tag, elementClass) {
+    customElements.define(tag, class extends elementClass {
+        static get is() { return tag; }
+    });
 }
 
 function handleOrder (order) {

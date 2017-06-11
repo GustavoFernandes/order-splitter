@@ -86,10 +86,5 @@
                 localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
             }
         });
-        function defineCustomElement(tag, elementClass) {
-            customElements.define(tag, class extends elementClass {
-                static get is() { return tag; }
-            });
-        }
     </script>
 </dom-module>
