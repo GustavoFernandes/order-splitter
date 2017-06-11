@@ -4,7 +4,8 @@
   ],
   "loadEagerly": [
     "!node_modules/**",
-    "./**/*.js"
+    "./elements/*",
+    "./common/*js"
   ]
 }
 
