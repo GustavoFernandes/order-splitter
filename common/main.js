@@ -3,7 +3,7 @@ window.onload = function() {
     if (window.location.search) {
         var queryString = window.location.search.substring(1); // remove prefixing '?'
         var order = new QueryStringParser().parse(queryString).split();
-        handleOrder(order);
+        OrderSplitResults.show(order);
     }
 };
 
@@ -11,10 +11,6 @@ function defineCustomElement(tag, elementClass) {
     customElements.define(tag, class extends elementClass {
         static get is() { return tag; }
     });
-}
-
-function handleOrder (order) {
-    display(order);
 }
 
 function display (order) {

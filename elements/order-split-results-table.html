@@ -1,0 +1,36 @@
+
+<dom-module id="order-split-results-table">
+    <template>
+        <div>
+            nothing to see here
+        </div>
+    </template>
+    <script>
+        defineCustomElement('order-split-results-table', class extends Polymer.Element {
+            ready() {
+                super.ready();
+                var element = this;
+                window.OrderSplitResults = {
+                    show(order) {
+                        element.order = order;
+                    }
+                };
+            }
+            static get properties() {
+                return {
+                    order: {
+                        type: Object,
+                        observer: '_onOrderChanged'
+                    }
+                };
+            }
+            _onOrderChanged() {
+                if (this.order.constructor !== Order) {
+                    throw new Error('order must be of type Order');
+                }
+                console.log('%cORDER CHANGE', 'font-size:15px');
+            }
+        });
+    </script>
+
+</dom-module>

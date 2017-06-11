@@ -75,7 +75,8 @@
                     console.log('trying csv parser');
                     order =  new CsvParser().parse(text).split();
                 }
-                handleOrder(order);
+                display(order); // TODO remove
+                OrderSplitResults.show(order);
             }
             _requestOrder() {
                 // this method makes no sense to me.
