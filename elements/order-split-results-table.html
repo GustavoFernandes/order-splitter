@@ -64,18 +64,21 @@
                     </tr>
                 </template>
             </table>
-            <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
             <paper-button on-tap="_onClipboardTap">Copy to Clipboard</paper-button>
             <a href="[[_makeUrl(order)]]">link</a>
+            <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
         </div>
     </template>
     <script>
         defineCustomElement('order-split-results-table', class extends Polymer.Element {
             _onClipboardTap() {
+                this.$.textForClipboard.hidden = false;
                 this.$.textForClipboard.select();
                 var successful = document.execCommand('copy');
                 if (!successful) {
                     console.error('clipboard copy failed');
+                } else {
+                    this.$.textForClipboard.hidden = true;
                 }
             }
             _computeBreakdownItems(people) {
@@ -166,7 +169,7 @@
                     output += name + '$' + this._prettifyNumber(price) + '\n';
                 }
 
-                return output;
+                return output + '\n' + this._makeUrl(this.order);
             }
             /**
              * Returns a display breaking down the Order split calculations
