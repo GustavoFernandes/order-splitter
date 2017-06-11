@@ -50,6 +50,7 @@
             </table>
             <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
             <paper-button on-tap="_onClipboardTap">Copy to Clipboard</paper-button>
+            <a href="[[_makeUrl(order)]]">link</a>
         </div>
     </template>
     <script>
@@ -171,29 +172,21 @@
                 breakdown += '</table>';
                 return breakdown;
             }
-            /**
-             * Returns a hyperlink to this split order.
-             * @param {number} tax - amount of taxes
-             * @param {fee} fee - amount of fees
-             * @param {number} tip - tip
-             * @param {Object} personItemCosts - map of person name to item costs
-             * @return {string} The hyperlink to this order
-             */
-            _makeHyperlink(tax, fee, tip, personItemCosts) {
+            _makeUrl(order) {
                 var link = window.location.origin + window.location.pathname;
                 if (link.indexOf('index.html') === -1) {
                     link += 'index.html';
                 }
 
-                if (tip !== 0) tip = this._prettifyNumber(tip);
+                if (order.tip !== 0) order.tip = this._prettifyNumber(order.tip);
 
-                link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
+                link += '?tax=' + order.tax + '&fee=' + order.fee + '&tip=' + order.tip;
 
-                for (var [person, val] of personItemCosts) {
+                for (var [person, val] of order.people) {
                     link += '&' + encodeURIComponent(person) + '=' + this._prettifyNumber(val);
                 }
 
-                return '<a href=' + link + '>' + link + '</a>';
+                return link;
             }
 
         });
