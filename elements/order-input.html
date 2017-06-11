@@ -67,15 +67,15 @@
                 var tip = Number(this.$.tip.value || 0);
                 var isTipPercentage = this.usePercentForTip;
 
-                handleOrder(function() {
-                    try {
-                        return new OrderUpParser().parse(text, fee, tax, tip, isTipPercentage).split();
-                    } catch(e) {
-                        console.error('OrderUp parser failed', e);
-                        console.log('trying csv parser');
-                        return new CsvParser().parse(text).split();
-                    }
-                });
+                var order;
+                try {
+                    order =  new OrderUpParser().parse(text, fee, tax, tip, isTipPercentage).split();
+                } catch(e) {
+                    console.error('OrderUp parser failed', e);
+                    console.log('trying csv parser');
+                    order =  new CsvParser().parse(text).split();
+                }
+                handleOrder(order);
             }
             _requestOrder() {
                 // this method makes no sense to me.

@@ -2,20 +2,13 @@ window.onload = function() {
   // check for URL query parameters
     if (window.location.search) {
         var queryString = window.location.search.substring(1); // remove prefixing '?'
-        handleOrder(function () {
-            return new QueryStringParser().parse(queryString).split();
-        });
+        var order = new QueryStringParser().parse(queryString).split();
+        handleOrder(order);
     }
 }
 
-function handleOrder (parserFunction) {
-    try {
-        var order = parserFunction();
-        display(order);
-    } catch (error) {
-        alert(error);
-        console.error(error);
-    }
+function handleOrder (order) {
+    display(order);
 }
 
 function display (order) {
