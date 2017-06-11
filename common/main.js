@@ -1,6 +1,4 @@
-window.onload = init;
-
-function init () {
+window.onload = function() {
   // check for URL query parameters
     if (window.location.search) {
         var queryString = window.location.search.substring(1); // remove prefixing '?'
