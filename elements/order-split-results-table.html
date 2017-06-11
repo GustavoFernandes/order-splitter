@@ -16,16 +16,21 @@
             }
         </style>
         <div>
-            <span class="chip">$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span>
-            +
-            <span class="chip">$[[_prettifyNumber(order.tax)]] tax</span>
-            +
-            <span class="chip">$[[_prettifyNumber(order.fee)]] fee</span>
-            +
-            <span class="chip">$[[_prettifyNumber(order.tip)]] tip (this field is broken)</span>
-            =
-            <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
             <table>
+                <tr>
+                    <td>Everyone</td>
+                    <td>
+                        <span class="chip">$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span>
+                        +
+                        <span class="chip">$[[_prettifyNumber(order.tax)]] tax</span>
+                        +
+                        <span class="chip">$[[_prettifyNumber(order.fee)]] fee</span>
+                        +
+                        <span class="chip">$[[_prettifyNumber(order.tip)]] tip (this field is broken)</span>
+                        =
+                        <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
+                    </td>
+                </tr>
             <template is="dom-repeat" items="[[_computeBreakdownItems(order.people)]]">
                 <tr>
                     <td>[[item.name]]</td>
