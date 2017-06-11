@@ -18,15 +18,23 @@
         <div>
             <table>
                 <tr>
-                    <td>Everyone</td>
+                    <td style="font-weight:bold;">Everyone</td>
                     <td>
                         <span class="chip">$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span>
+                    </td>
+                    <td>
                         +
                         <span class="chip">$[[_prettifyNumber(order.tax)]] tax</span>
+                    </td>
+                    <td>
                         +
                         <span class="chip">$[[_prettifyNumber(order.fee)]] fee</span>
+                    </td>
+                    <td>
                         +
                         <span class="chip">$[[_prettifyNumber(order.tip)]] tip (this field is broken)</span>
+                    </td>
+                    <td>
                         =
                         <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
                     </td>
@@ -36,14 +44,22 @@
                         <td>[[item.name]]</td>
                         <td>
                             <span class="chip">$[[item.price]] price</span>
+                        </td>
+                        <td>
                             +
                             <span class="chip">$[[_multiply(item.price, order.taxPercent)]] tax <paper-tooltip>[[item.price]] x [[order.taxPercent]]</paper-tooltip></span>
+                        </td>
+                        <td>
                             +
                             <span class="chip">$[[_multiply(item.price, order.tipPercent)]] tip <paper-tooltip>[[item.price]] x [[order.tipPercent]]</paper-tooltip></span>
+                        </td>
+                        <td>
                             +
                             <span class="chip">$[[_prettifyNumber(order.feesPerPerson)]] fee <paper-tooltip>[[order.feesPerPerson]]</paper-tooltip></span>
+                        </td>
+                        <td>
                             =
-                            <span class="chip">$[[_computePersonTotal(item.name)]] total</span>
+                            <span class="chip">$[[_computePersonTotal(item.name)]]</span>
                         </td>
                     </tr>
                 </template>
