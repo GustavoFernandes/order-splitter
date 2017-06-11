@@ -48,10 +48,19 @@
                     </tr>
                 </template>
             </table>
+            <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
+            <paper-button on-tap="_onClipboardTap">Copy to Clipboard</paper-button>
         </div>
     </template>
     <script>
         defineCustomElement('order-split-results-table', class extends Polymer.Element {
+            _onClipboardTap() {
+                this.$.textForClipboard.select();
+                var successful = document.execCommand('copy');
+                if (!successful) {
+                    console.error('clipboard copy failed');
+                }
+            }
             _computeBreakdownItems(people) {
                 return Array.from(this.order.people.entries()).map(entry => {
                     return {
@@ -115,33 +124,12 @@
 
                 return s;
             }
-            _display(order) {
-
-                var calculationsTable = '<table>' +
-                    '<tr><td>Subtotal:</td><td>$' + this._prettifyNumber(order.subTotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
-                    '<tr><td>Tax:</td><td>$' + this._prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
-                    '<tr><td>Fees:</td><td>$' + this._prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
-                    '<tr><td>Tip:</td><td>$' + this._prettifyNumber(order.tipDollars) + '</td><td>(' + (order.isTipPercentage ? 'tip percent * subtotal' : 'user input') + ')</td></tr>' +
-                    '<tr><td>Total:</td><td>$' + this._prettifyNumber(order.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
-                    '<tr><td>Fees per Person:</td><td>$' + this._prettifyNumber(order.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
-                    '<tr><td>Tax (Percent):</td><td>' + order.taxPercentDisplay + '%</td><td>(tax / subtotal)</td></tr>' +
-                    '<tr><td>Tip (Percent):</td><td>' + order.tipPercentDisplay + '%</td><td>(' + (order.isTipPercentage ? 'user input' : 'tip / subtotal') + ')</td></tr>' +
-                    '</table>';
-
-                var html =
-                    '<hr>' +
-                    calculationsTable + '<br>' +
-                    this._makeBreakdownDisplay(order) + '<br>' +
-                    'Publish the following:<br>' +
-                    '<pre>' + this._makeTotalsDisplay(order.totals) + '</pre>' +
-                    this._makeHyperlink(order.tax, order.fee, order.tip, order.people);
-            }
             /**
              * Returns a listing of names to split costs
              * @param {object} totals - The totals property from the Order
              * @returns {string} A view mapping names to split costs
              */
-            _makeTotalsDisplay(totals) {
+            _makeTextForClipboard(totals) {
               // get length of longest name
                 var longestName = -1;
                 for (var [person, price] of totals) {
@@ -158,7 +146,7 @@
                     for (var i = person.length; i < longestName; i++) {
                         name += ' ';
                     }
-                    output += name + '$' + this._prettifyNumber(price) + '<br>';
+                    output += name + '$' + this._prettifyNumber(price) + '\n';
                 }
 
                 return output;
