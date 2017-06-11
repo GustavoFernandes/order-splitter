@@ -40,11 +40,11 @@
             /**
              * Returns a string of a number in the format "#.##"
              * @example
-             * prettifyNumber(12); // returns "12.00"
+             * _prettifyNumber(12); // returns "12.00"
              * @param {number} n - The number to prettify
              * @returns {string} A string of a number rounded and padded to 2 decimal places
              */
-            prettifyNumber(n) {
+            _prettifyNumber(n) {
                 n = Math.round(n * 100) / 100; // round to 2 decimal places
 
               // pad to 2 decimal places if necessary
@@ -63,12 +63,12 @@
             _display(order) {
 
                 var calculationsTable = '<table>' +
-                    '<tr><td>Subtotal:</td><td>$' + this.prettifyNumber(order.subTotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
-                    '<tr><td>Tax:</td><td>$' + this.prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
-                    '<tr><td>Fees:</td><td>$' + this.prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
-                    '<tr><td>Tip:</td><td>$' + this.prettifyNumber(order.tipDollars) + '</td><td>(' + (order.isTipPercentage ? 'tip percent * subtotal' : 'user input') + ')</td></tr>' +
-                    '<tr><td>Total:</td><td>$' + this.prettifyNumber(order.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
-                    '<tr><td>Fees per Person:</td><td>$' + this.prettifyNumber(order.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
+                    '<tr><td>Subtotal:</td><td>$' + this._prettifyNumber(order.subTotal) + '</td><td>(user input; sum of item costs)</td></tr>' +
+                    '<tr><td>Tax:</td><td>$' + this._prettifyNumber(order.tax) + '</td><td>(user input)</td></tr>' +
+                    '<tr><td>Fees:</td><td>$' + this._prettifyNumber(order.fee) + '</td><td>(user input)</td></tr>' +
+                    '<tr><td>Tip:</td><td>$' + this._prettifyNumber(order.tipDollars) + '</td><td>(' + (order.isTipPercentage ? 'tip percent * subtotal' : 'user input') + ')</td></tr>' +
+                    '<tr><td>Total:</td><td>$' + this._prettifyNumber(order.total) + '</td><td>(subtotal + tax + fees + tip)</td></tr>' +
+                    '<tr><td>Fees per Person:</td><td>$' + this._prettifyNumber(order.feesPerPerson) + '</td><td>(fees / number of people)</td></tr>' +
                     '<tr><td>Tax (Percent):</td><td>' + order.taxPercentDisplay + '%</td><td>(tax / subtotal)</td></tr>' +
                     '<tr><td>Tip (Percent):</td><td>' + order.tipPercentDisplay + '%</td><td>(' + (order.isTipPercentage ? 'user input' : 'tip / subtotal') + ')</td></tr>' +
                     '</table>';
@@ -76,10 +76,10 @@
                 var html =
                     '<hr>' +
                     calculationsTable + '<br>' +
-                    this.makeBreakdownDisplay(order) + '<br>' +
+                    this._makeBreakdownDisplay(order) + '<br>' +
                     'Publish the following:<br>' +
-                    '<pre>' + this.makeTotalsDisplay(order.totals) + '</pre>' +
-                    this.makeHyperlink(order.tax, order.fee, order.tip, order.people);
+                    '<pre>' + this._makeTotalsDisplay(order.totals) + '</pre>' +
+                    this._makeHyperlink(order.tax, order.fee, order.tip, order.people);
 
                 this.$.tmp.innerHTML = html;
             }
@@ -88,7 +88,7 @@
              * @param {object} totals - The totals property from the Order
              * @returns {string} A view mapping names to split costs
              */
-            makeTotalsDisplay(totals) {
+            _makeTotalsDisplay(totals) {
               // get length of longest name
                 var longestName = -1;
                 for (var [person, price] of totals) {
@@ -105,7 +105,7 @@
                     for (var i = person.length; i < longestName; i++) {
                         name += ' ';
                     }
-                    output += name + '$' + this.prettifyNumber(price) + '<br>';
+                    output += name + '$' + this._prettifyNumber(price) + '<br>';
                 }
 
                 return output;
@@ -115,7 +115,7 @@
              * @param {Order} order - the Order to breakdown
              * @returns {string} A view of the Order breakdown
              */
-            makeBreakdownDisplay(order) {
+            _makeBreakdownDisplay(order) {
                 var breakdown = '<table id="breakdown">';
                 breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
                 for (var [person, price] of order.people) {
@@ -124,7 +124,7 @@
                     price + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
                     price + ' * ' + order.tipPercent + '</td><td> + ' + // tip
                     order.feesPerPerson + '</td><td> = ' +
-                    this.prettifyNumber(order.totals.get(person)) + '</td></tr>';
+                    this._prettifyNumber(order.totals.get(person)) + '</td></tr>';
                 }
 
                 breakdown += '</table>';
@@ -138,18 +138,18 @@
              * @param {Object} personItemCosts - map of person name to item costs
              * @return {string} The hyperlink to this order
              */
-            makeHyperlink(tax, fee, tip, personItemCosts) {
+            _makeHyperlink(tax, fee, tip, personItemCosts) {
                 var link = window.location.origin + window.location.pathname;
                 if (link.indexOf('index.html') === -1) {
                     link += 'index.html';
                 }
 
-                if (tip !== 0) tip = prettifyNumber(tip);
+                if (tip !== 0) tip = this._prettifyNumber(tip);
 
                 link += '?tax=' + tax + '&fee=' + fee + '&tip=' + tip;
 
                 for (var [person, val] of personItemCosts) {
-                    link += '&' + encodeURIComponent(person) + '=' + this.prettifyNumber(val);
+                    link += '&' + encodeURIComponent(person) + '=' + this._prettifyNumber(val);
                 }
 
                 return '<a href=' + link + '>' + link + '</a>';
