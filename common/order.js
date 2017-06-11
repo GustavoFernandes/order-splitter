@@ -100,6 +100,7 @@ class Order {
         return this;
     }
 
+    // not used. we should delete this
     toJSON() {
         let ret = {};
         ret.people = Array.from(this.people);
@@ -111,6 +112,7 @@ class Order {
         return ret;
     }
     
+    // not used. we should delete this
     static fromJSON(json) {
         let order = new Order();
         order.people = new Map(json.people);
