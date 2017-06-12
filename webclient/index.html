@@ -50,16 +50,21 @@
                 grid-template-columns: repeat(auto-fill, minmax(200px, 500px));
             }
         </style>
-
-        <script>
-            // this is to help with debugging any SW caching issues if they appear
-            console.debug('script version: INSERT_SHA');
-        </script>
     </head>
     <body>
         <div align="right">INSERT_VERSION</div>
-        <div align="right">INSERT_SHA</div>
+        <div align="right" id="sha">INSERT_SHA</div>
         <div align="right">INSERT_BUILD_TIME</div>
+        <script>
+            // this is to help with debugging any SW caching issues if they appear
+            var scriptSha = 'INSERT_SHA';
+            var htmlSha = document.querySelector('#sha').innerText;
+            console.debug(`script version: ${scriptSha}`);
+            console.debug(`html version:   ${htmlSha}`);
+            if (scriptSha !== htmlSha) {
+                alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');
+            }
+        </script>
         <div class="wrapper">
             <div>
                 <div>
