@@ -64,10 +64,6 @@ class Order {
         return this._tipDollars / this.subTotal;
     }
 
-    get tipPercentDisplay() {
-        return this.tipPercent * 100;
-    }
-
     get tipDollars() {
         return this.tipPercent * this.subTotal;
     }
