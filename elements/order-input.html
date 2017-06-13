@@ -1,0 +1,90 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<dom-module id="order-input">
+    <template>
+        <style>
+            .hidden {
+                display: none;
+            }
+            paper-input {
+                /* display: inline-block; */
+                max-width: 100px;
+                --paper-input-container: { 
+                    padding: 0;
+                };
+            }
+            paper-checkbox {
+                margin-left: 10px;
+            }
+            paper-button {
+                margin-top: 10px;
+            }
+            #tipContainer {
+                display: flex;
+                align-items: flex-end;
+            }
+            span[slot="prefix"] {
+                padding-right: 2px;
+            }
+        </style>
+        <div>
+            <textarea id="textarea" rows="20" cols="60" placeholder="Paste order details here" autofocus></textarea>
+            <paper-input type="number" label="Taxes" id="tax">
+                <span slot="prefix">$</span>
+            </paper-input>
+            <paper-input type="number" label="Fees"  id="fee">
+                <span slot="prefix">$</span>
+            </paper-input>
+            <div id="tipContainer">
+            <paper-input type="number" label="Tip"   id="tip">
+                <span slot="prefix" class$="[[_computeTipDollarClass(usePercentForTip)]]">$</span>
+                <span slot="suffix" class$="[[_computeTipPercentClass(usePercentForTip)]]">%</span>
+            </paper-input>
+            <paper-checkbox checked="{{usePercentForTip}}" on-tap="_onCheckboxTap">Percentage</paper-checkbox>
+            </div>
+            <paper-button id="split" on-tap="_onSplitButtonTap">Split</paper-button>
+            <paper-button id="parseDom" disabled on-tap="_requestOrder">Parse dom? wut?</paper-button>
+        </div>
+    </template>
+    <script>
+        defineCustomElement('order-input', class extends Polymer.Element {
+            ready() {
+                super.ready();
+                this.usePercentForTip = JSON.parse(localStorage.getItem('usePercentForTip'));
+            }
+            _computeTipPercentClass() {
+                return this.usePercentForTip ? '' : 'hidden';
+            }
+            _computeTipDollarClass() {
+                return !this.usePercentForTip ? '' : 'hidden';
+            }
+            _onSplitButtonTap() {
+                var text = this.$.textarea.value;
+                var tax = Number(this.$.tax.value || 0);
+                var fee = Number(this.$.fee.value || 0);
+                var tip = Number(this.$.tip.value || 0);
+                var isTipPercentage = this.usePercentForTip;
+
+                var order;
+                try {
+                    order =  new OrderUpParser().parse(text, fee, tax, tip, isTipPercentage).split();
+                } catch(e) {
+                    console.error('OrderUp parser failed', e);
+                    console.log('trying csv parser');
+                    order =  new CsvParser().parse(text).split();
+                }
+                OrderSplitResults.show(order);
+            }
+            _requestOrder() {
+                // this method makes no sense to me.
+                // can we delete it?
+                window.postMessage('parseDom', '*');
+            }
+            _onCheckboxTap() {
+                localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
+            }
+        });
+    </script>
+</dom-module>

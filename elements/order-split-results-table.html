@@ -1,0 +1,215 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+
+<dom-module id="order-split-results-table">
+    <template hidden>
+        <style>
+            :host {
+                @apply(--paper-font-common-base);
+            }
+            span.chip {
+                @apply(--paper-font-common-base);
+                background-color: var(--paper-grey-300);
+                padding: 5px;
+                border-radius: 14px;
+                line-height: 38px;
+            }
+            td {
+                white-space: nowrap; /* maintain dignity on small-width windows */
+            }
+        </style>
+        <div>
+            <table>
+                <tr>
+                    <td style="font-weight:bold;">Everyone</td>
+                    <td>
+                        <span class="chip">$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span>
+                    </td>
+                    <td>
+                        +
+                        <span class="chip">$[[_prettifyNumber(order.tax)]] tax</span>
+                    </td>
+                    <td>
+                        +
+                        <span class="chip">$[[_prettifyNumber(order.fee)]] fee</span>
+                    </td>
+                    <td>
+                        +
+                        <span class="chip">$[[order.tipDollars]] tip</span>
+                    </td>
+                    <td>
+                        =
+                        <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
+                    </td>
+                </tr>
+                <template is="dom-repeat" items="[[_computeBreakdownItems(order.people)]]">
+                    <tr>
+                        <td>[[item.name]]</td>
+                        <td>
+                            <span class="chip">$[[item.price]] price</span>
+                        </td>
+                        <td>
+                            +
+                            <span class="chip">$[[_multiply(item.price, order.taxPercent)]] tax <paper-tooltip>[[item.price]] x [[order.taxPercent]]</paper-tooltip></span>
+                        </td>
+                        <td>
+                            +
+                            <span class="chip">$[[_prettifyNumber(order.feesPerPerson)]] fee <paper-tooltip>[[order.feesPerPerson]]</paper-tooltip></span>
+                        </td>
+                        <td>
+                            +
+                            <span class="chip">$[[_multiply(item.price, order.tipPercent)]] tip <paper-tooltip>[[item.price]] x [[order.tipPercent]]</paper-tooltip></span>
+                        </td>
+                        <td>
+                            =
+                            <span class="chip">$[[_computePersonTotal(item.name)]]</span>
+                        </td>
+                    </tr>
+                </template>
+            </table>
+            <paper-button on-tap="_onClipboardTap">Copy to Clipboard</paper-button>
+            <a href="[[_makeUrl(order)]]">link</a>
+            <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
+        </div>
+    </template>
+    <script>
+        defineCustomElement('order-split-results-table', class extends Polymer.Element {
+            _onClipboardTap() {
+                this.$.textForClipboard.hidden = false;
+                this.$.textForClipboard.select();
+                var successful = document.execCommand('copy');
+                if (!successful) {
+                    console.error('clipboard copy failed');
+                } else {
+                    this.$.textForClipboard.hidden = true;
+                }
+            }
+            _computeBreakdownItems(people) {
+                return Array.from(this.order.people.entries()).map(entry => {
+                    return {
+                        name: entry[0],
+                        price: entry[1]
+                    };
+                });
+            }
+            _computePersonTotal(name) {
+                return this._prettifyNumber(this.order.totals.get(name));
+            }
+            _multiply(a, b) {
+                return this._prettifyNumber(a * b);
+            }
+            ready() {
+                super.ready();
+                this.hidden = true; // hide until order property is set
+
+                var element = this;
+                window.OrderSplitResults = {
+                    show(order) {
+                        element.order = order;
+                    }
+                };
+            }
+            static get properties() {
+                return {
+                    order: {
+                        type: Object,
+                        observer: '_onOrderChanged'
+                    }
+                };
+            }
+            _onOrderChanged(order) {
+                if (this.order.constructor !== Order) {
+                    throw new Error('order must be of type Order');
+                }
+                this.hidden = false;
+                console.log('order', order);
+            }
+            /**
+             * Returns a string of a number in the format "#.##"
+             * @example
+             * _prettifyNumber(12); // returns "12.00"
+             * @param {number} n - The number to prettify
+             * @returns {string} A string of a number rounded and padded to 2 decimal places
+             */
+            _prettifyNumber(n) {
+                n = Math.round(n * 100) / 100; // round to 2 decimal places
+
+              // pad to 2 decimal places if necessary
+                var s = n.toString();
+
+                if (s.indexOf('.') === -1) {
+                    s += '.';
+                }
+
+                while (s.length < s.indexOf('.') + 3) {
+                    s += '0';
+                }
+
+                return s;
+            }
+            /**
+             * Returns a listing of names to split costs
+             * @param {object} totals - The totals property from the Order
+             * @returns {string} A view mapping names to split costs
+             */
+            _makeTextForClipboard(totals) {
+              // get length of longest name
+                var longestName = -1;
+                for (var [person, price] of totals) {
+                    longestName = Math.max(person.length, longestName);
+                }
+
+              // add 1 to longest name for a space after name
+                longestName += 1;
+
+                var output = '';
+                var name;
+                for (let [person, price] of totals) {
+                    let name = person;
+                    for (var i = person.length; i < longestName; i++) {
+                        name += ' ';
+                    }
+                    output += name + '$' + this._prettifyNumber(price) + '\n';
+                }
+
+                return output + '\n' + this._makeUrl(this.order);
+            }
+            /**
+             * Returns a display breaking down the Order split calculations
+             * @param {Order} order - the Order to breakdown
+             * @returns {string} A view of the Order breakdown
+             */
+            _makeBreakdownDisplay(order) {
+                var breakdown = '<table id="breakdown">';
+                breakdown += '<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';
+                for (var [person, price] of order.people) {
+                    breakdown += '<tr><td>' + person + '</td><td>' +
+                    price + '</td><td> + ' + // item costs
+                    price + ' * ' + order.taxPercent + '</td><td> + ' + // taxes
+                    price + ' * ' + order.tipPercent + '</td><td> + ' + // tip
+                    order.feesPerPerson + '</td><td> = ' +
+                    this._prettifyNumber(order.totals.get(person)) + '</td></tr>';
+                }
+
+                breakdown += '</table>';
+                return breakdown;
+            }
+            _makeUrl(order) {
+                var link = window.location.origin + window.location.pathname;
+                if (link.indexOf('index.html') === -1) {
+                    link += 'index.html';
+                }
+
+                link += '?tax=' + order.tax + '&fee=' + order.fee + '&tip=' + order.tipDollars;
+
+                for (var [person, val] of order.people) {
+                    link += '&' + encodeURIComponent(person) + '=' + this._prettifyNumber(val);
+                }
+
+                return link;
+            }
+
+        });
+    </script>
+
+</dom-module>

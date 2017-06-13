@@ -64,10 +64,6 @@ class Order {
         return this._tipDollars / this.subTotal;
     }
 
-    get tipPercentDisplay() {
-        return this.tipPercent * 100;
-    }
-
     get tipDollars() {
         return this.tipPercent * this.subTotal;
     }
@@ -81,27 +77,26 @@ class Order {
     }
 
     split() {
-        let totals = new Map();
-        this.subTotal = 0;
-        for(let [name, price] of this.people.entries()) {
-            this.subTotal += price;
-        }
+
+        this.subTotal = Array.from(this.people.values()).reduce((sum, value) => sum+value);
         this.subTotal += this.taxedFees;
-        for(let [name, price] of this.people.entries()) {
+
+        this.totals = new Map();
+        for (let [name, price] of this.people.entries()) {
             let totalForPerson = price;
             totalForPerson += price * this.taxPercent;
             totalForPerson += price * this.tipPercent;
             totalForPerson += this.feesPerPerson;
-            totals.set(name, totalForPerson);
+            this.totals.set(name, totalForPerson);
         }
-        this.totals = totals;
-        let totalPrice = Array.from(totals.values()).reduce((acc, val) => acc+val);
+        let totalPrice = Array.from(this.totals.values()).reduce((acc, val) => acc+val);
         if(Math.round(totalPrice*100) != Math.round(this.total*100)) {
             throw new Error('Everyone\'s share does not add up to total');
         }
         return this;
     }
 
+    // not used. we should delete this
     toJSON() {
         let ret = {};
         ret.people = Array.from(this.people);
@@ -113,6 +108,7 @@ class Order {
         return ret;
     }
     
+    // not used. we should delete this
     static fromJSON(json) {
         let order = new Order();
         order.people = new Map(json.people);
