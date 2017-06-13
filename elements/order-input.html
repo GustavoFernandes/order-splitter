@@ -45,7 +45,6 @@
             <paper-checkbox checked="{{usePercentForTip}}" on-tap="_onCheckboxTap">Percentage</paper-checkbox>
             </div>
             <paper-button id="split" on-tap="_onSplitButtonTap">Split</paper-button>
-            <paper-button id="parseDom" disabled on-tap="_requestOrder">Parse dom? wut?</paper-button>
         </div>
     </template>
     <script>
@@ -76,11 +75,6 @@
                     order =  new CsvParser().parse(text).split();
                 }
                 OrderSplitResults.show(order);
-            }
-            _requestOrder() {
-                // this method makes no sense to me.
-                // can we delete it?
-                window.postMessage('parseDom', '*');
             }
             _onCheckboxTap() {
                 localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
