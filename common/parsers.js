@@ -55,9 +55,11 @@ class OrderUpParser {
         lines.reduce((lastItemCost, line) => {
             let itemCostMatch, nameMatch;
 
-            if (itemCostMatch = line.match('.*\\$([0-9.]+)')) {
-                let itemCost = Number(itemCostMatch[1]);
-                return itemCost;
+            if(!lastItemCost) {
+                if (itemCostMatch = line.match('.*\\$([0-9.]+)')) {
+                    let itemCost = Number(itemCostMatch[1]);
+                    return itemCost;
+                }
             }
 
             if (nameMatch = line.match('.*Label for:(.*)')) {
