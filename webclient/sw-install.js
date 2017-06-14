@@ -1,5 +1,11 @@
 (function() {
     console.debug('service worker is disabled for now.');
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            console.log('uninstalling old service worker');
+            registration.unregister();
+        } 
+    });
     return; // no service worker until we iron bugs out of caching
     let queryParams = new Map(location.search.slice(1).split('&').map(t=>t.split('=')));
     if (location.hostname === 'localhost' && queryParams.get('sw') !== 'test') {
