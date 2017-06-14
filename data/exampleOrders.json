@@ -1,0 +1,4 @@
+{
+    "orderUp": "1\t12 Nuggets -\t$4.39\n\tSauce: Ketchup\n\tLabel for:Alice\n2\tTots -\t$1.99\n\tLabel for:Bob\n1\t6 Wings -\t$6.29\n\tWing Seasoning: Sweet Honey BBQ\n\tLabel for:Charlie",
+    "csv": "Alice, $4.39\nBob,1.99\nCharlie,      6.29, 4\nfee,4\ntax,$3\ntip, 4"
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Order Splitter",
+  "short_name": "OrderSplitter",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#fff",
+  "description": "Group order splitter",
+  "icons": [{
+    "src": "favicon.ico",
+    "sizes": "72x72 96x96 128x128 144x144 256x256"
+  }],
+  "related_applications": [{
+    "platform": "web"
+  }]
+}

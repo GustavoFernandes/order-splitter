@@ -1,0 +1,25 @@
+{
+  "name": "order-splitter",
+  "description": "OrderUp order splitter",
+  "main": "src/main.js",
+  "authors": [],
+  "license": "MIT",
+  "homepage": "https://github.com/MergeMyPullRequest/order-splitter",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "^2.0.0",
+    "iron-flex-layout": "^2.0.0",
+    "paper-item": "PolymerElements/paper-item#2.0",
+    "paper-input": "^2.0.1",
+    "paper-checkbox": "^2.0.0",
+    "paper-button": "^2.0.0",
+    "paper-tooltip": "^2.0.0",
+    "iron-location": "PolymerElements/iron-location#^2.0.1"
+  }
+}

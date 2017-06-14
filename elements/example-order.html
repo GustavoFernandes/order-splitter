@@ -1,0 +1,81 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="../bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+
+<dom-module id="example-order">
+    <template strip-whitespace>
+        <style include="iron-flex iron-flex-alignment"></style>
+        <style>
+            .pointer {
+                cursor: pointer;
+            }
+            .padding-right {
+                padding-right: 20px;
+            }
+        </style>
+        <div class="horizontal layout">
+            <div class="padding-right vertical layout">
+                <dom-repeat items="[[orderTypes]]">
+                    <template>
+                        <paper-item class="pointer" on-click="_selectItem">[[item]]</paper-item>
+                    </template>
+                </dom-repeat>
+            </div>
+            <span>[[selectedOrder]]</span>
+        </div>
+        <array-selector id="selector" items="{{orders}}" selected="{{selectedOrder}}"></array-selector>
+    </template>
+</dom-module>
+
+<script>
+    class ExampleOrder extends Polymer.Element {
+        static get is() {
+            return "example-order";
+        }
+
+        static get properties() {
+            return {
+                orders: Array,
+                selectedOrder: Array,
+                orderTypes: Array
+            };
+        }
+
+        _selectItem(e) {
+            this.$.selector.selectIndex(e.model.index);
+        }
+
+        getData() {
+            let root = window.location.origin;
+            root += window.location.pathname.replace("index.html", "");
+            fetch(root+"data/exampleOrders.json")
+                .then(stream => stream.body.getReader().read())
+                .then(({value, done}) => this.parse(value))
+                .then(orders => {
+                    this.orderTypes = Array.from(orders.keys());
+                    this.orders = Array.from(orders.values());
+                    this.selectedOrder = this.orders[0];
+                });
+        }
+
+        parse(value) {
+            const string = value.reduce((acc, code) => acc += String.fromCharCode(code), "");
+            const json = JSON.parse(string);
+            let ret = new Map();
+            for(const orderType in json) {
+                const order = json[orderType];
+                ret.set(orderType, order);
+            }
+            return ret;
+        }
+
+        ready() {
+            super.ready();
+            this.getData();
+        }
+    }
+
+window.customElements.define(ExampleOrder.is, ExampleOrder);
+
+</script>

@@ -1,90 +1,173 @@
-var src = ['src/**', 'sw/**'];
-var deployDir = 'docs';
+const deployDir = './dist';
+let DEPLOY = true;
 
-var gulp = require('gulp');
+const copyTheseFilesToDist = [
+    './webclient/*.ico',
+    './webclient/*.png',
+    './common/app-icon/*',
+    './webclient/sw.js'
+];
+
+const orderData = [
+    './data/*',
+    './images/*'
+];
+
+const dontVulcanizeTheseFiles = [
+    './bower_components/webcomponentsjs/custom-elements-es5-adapter.js'
+];
+
+var babel = require('gulp-babel');
+var browserSync = require('browser-sync');
 var clean = require('gulp-clean');
 var concat = require('gulp-concat');
-var jshint = require('gulp-jshint');
-var uglify = require('gulp-uglify');
-var babel = require('gulp-babel');
-var inject = require('gulp-inject');
-var minifyHtml = require('gulp-minify-html');
+var crisper = require('gulp-crisper');
+var debug = require('gulp-debug');
+var eslint = require('gulp-eslint');
+var eslintConfig = require('./.eslint.json');
+var filter = require('gulp-filter');
+var ghPages = require('gulp-gh-pages');
+var git = require('git-rev-sync');
+var gulp = require('gulp');
+var gulpif = require('gulp-if');
+var merge = require('gulp-merge');
 var minifyCss = require('gulp-clean-css');
-var browserSync = require('browser-sync');
-var injectVersion = require('gulp-inject-version');
+var minifyHtml = require('gulp-minify-html');
+var replace = require('gulp-replace');
+var uglify = require('gulp-uglify');
+var vulcanize = require('gulp-vulcanize');
 
-gulp.task('default', ['lint']);
+var version = JSON.parse(require('fs').readFileSync('./package.json')).version;
 
-gulp.task('build', ['build-html', 'build-sw']);
+gulp.task('default', ['vulcanize', 'copy-files']);
+
+gulp.task('copy-files', ['clean'], function() {
+    return merge(
+        gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
+            .pipe(gulp.dest(deployDir)),
+        gulp.src([...copyTheseFilesToDist])
+            .pipe(replace('INSERT_SHA', git.short()))
+            .pipe(debug('copied files'))
+            .pipe(gulp.dest(deployDir))
+    );
+});
+
+gulp.task('copy-files-ext', ['vulcanize-ext', 'clean-ext'], function() {
+    return merge(
+        gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
+            .pipe(gulp.dest(extDir)),
+        gulp.src([...copyTheseFilesToDist])
+            .pipe(replace('INSERT_SHA', git.short()))
+            .pipe(debug('copied files'))
+            .pipe(gulp.dest(extDir)),
+        gulp.src(['!./chrome_extension/popup.html', './chrome_extension/*', './common/order.js'])
+            .pipe(gulp.dest(extDir))
+    );
+});
+
+function vulc(src) {
+    var jsFilter = filter(['**/*.js'], {restore: true});
+    var htmlFilter = filter(['**/*.html'], {restore: true});
+
+    return gulp.src(src)
+        .pipe(vulcanize({
+            excludes: dontVulcanizeTheseFiles,
+            stripComments: true,
+            inlineCss: true,
+            inlineScripts: true
+        }))
+        .pipe(gulpif(!DEPLOY, replace(/.*custom-elements-es5-adapter.*/g, '')))
+        .pipe(crisper({
+            scriptInHead: false
+        }))
+
+        .pipe(htmlFilter)
+        .pipe(minifyHtml())
+
+        .pipe(htmlFilter.restore)
+
+        .pipe(jsFilter)
+        .pipe(gulpif(DEPLOY, babel({
+            presets: ['es2015'],
+            plugins: [
+                'async-to-promises'
+            ],
+            ignore: [
+                '*custom-elements-es5-adapter.js'
+            ],
+            compact: true
+        })))
+
+        .pipe(jsFilter.restore)
+
+        .pipe(replace('INSERT_VERSION', version))
+        .pipe(replace('INSERT_SHA', git.short()))
+        .pipe(replace('INSERT_BUILD_TIME', new Date().toLocaleString()));
+}
+
+gulp.task('vulcanize-ext', ['clean-ext'], function() {
+    return vulc('./chrome_extension/popup.html')
+        .pipe(gulp.dest(extDir));
+});
+
+gulp.task('vulcanize', ['clean'], function() {
+    return vulc('./webclient/index.html')
+        .pipe(gulp.dest(deployDir));
+});
 
 gulp.task('clean', function () {
-  return gulp.src(deployDir)
+    return gulp.src(deployDir)
       .pipe(clean());
 });
 
+const extDir = './ext-dist/';
+
+gulp.task('ext', ['switch-to-src', 'copy-files-ext']);
+
+gulp.task('clean-ext', function() {
+    return gulp.src(extDir).pipe(clean());
+});
+
 gulp.task('lint', function () {
-  var filesToLint = src.map(path => path + '/*.js');
-  filesToLint.push('gulpfile.js');
-
-  return gulp.src(filesToLint)
-      .pipe(jshint({
-        eqeqeq: true,
-        esversion: 6,
-        eqnull: true
-      }))
-      .pipe(jshint.reporter('jshint-stylish'))
-      .pipe(jshint.reporter('fail'));
+    function isFixed(file) {
+        return file.eslint != null && file.eslint.fixed;
+    }
+    return gulp.src([
+        './**/*.js', 
+        '!./dist/**.js', 
+        '!./ext-dist/**.js',
+        '!./node_modules/**', 
+        '!./bower_components'
+    ], {base: './'})
+        .pipe(eslint(eslintConfig))
+        .pipe(eslint.format())
+        .pipe(eslint.failAfterError())
+        .pipe(gulpif(isFixed, gulp.dest('.')));
 });
 
-gulp.task('build-js', ['clean'], function () {
-  return gulp.src(['./src/**/*.js', './sw/install.js'])
-      .pipe(injectVersion())
-      .pipe(babel({
-       presets: ['es2015']
-      }))
-      .pipe(concat('all.min.js'))
-      .pipe(uglify())
-      .pipe(gulp.dest(deployDir));
+gulp.task('gh-deploy', ['switch-to-src','default'], () => {
+    return gulp.src(deployDir+'/**')
+        .pipe(ghPages({
+            remote: 'origin',
+            branch: 'gh-pages'
+        }));
 });
 
-gulp.task('build-css', ['clean'], function () {
-  return gulp.src('src/**/*.css')
-      .pipe(minifyCss())
-      .pipe(gulp.dest(deployDir));
+gulp.task('serve', ['switch-to-src', 'default'], function() {
+    browserSync({
+        server: {
+            baseDir: deployDir
+        },
+        notify: false
+    });
+    gulp.watch([
+        './webclient/*', 
+        './common/*',
+        './elements/*',
+        './data/*'
+    ], ['switch-to-src', 'default', browserSync.reload]);
 });
 
-gulp.task('build-html', ['build-js', 'build-css'], function () {
-  // Inject references of every JS and CSS file in the deploy directory (excluding sw.js) into index.html.
-  var target = gulp.src('src/index.html');
-  var sources = gulp.src(['!' + deployDir + '/sw.js', deployDir + '/*.{js,css}',], {
-    read: false
-  });
-
-  return target.pipe(inject(sources, {
-    ignorePath: deployDir,
-    addRootSlash: false
-  }))
-      .pipe(injectVersion())
-      .pipe(minifyHtml())
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('build-sw', ['clean'], function () {
-  return gulp.src('./sw/sw.js')
-      .pipe(injectVersion())
-      .pipe(babel({
-        presets: ['es2015']
-      }))
-      .pipe(uglify())
-      .pipe(gulp.dest(deployDir));
-});
-
-gulp.task('serve', function () {
-  browserSync({
-    server: {
-      baseDir: './src/'
-    },
-    notify: false
-  });
-  gulp.watch(['./src/*'], browserSync.reload);
+gulp.task('switch-to-src', function() {
+    DEPLOY = false;
 });

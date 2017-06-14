@@ -1,0 +1,151 @@
+<html>
+    <head>
+        <title>Order Splitter</title>
+        <meta charset="UTF-8">
+
+        <!-- Chrome for Android theme color -->
+        <meta name="theme-color" content="#11923B">
+
+        <!-- Add to homescreen for Chrome on Android -->
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="PSK">
+        <link rel="icon" sizes="192x192" href="ordersplitter192.png" asnyc>
+
+        <!-- chrome favicon -->
+        <link rel="icon" sizes="16x16" href="ordersplitter16.png">
+        <!-- firefox favicon -->
+        <link rel="icon" sizes="32x32" href="ordersplitter32.png">
+
+        <!-- Add to homescreen for Safari on iOS -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="Order Splitter">
+        <link rel="apple-touch-icon" href="ordersplitter152.png" asnyc>
+
+        <!-- Tile color for Win8 -->
+        <meta name="msapplication-TileColor" content="#3372DF">
+        <!-- Tile icon for Win8 (144x144) -->
+        <meta name="msapplication-TileImage" content="ordersplitter144.png" async>
+
+        <!--
+        <script src="../bower_components/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+        <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+        -->
+
+        <script src="../common/parsers.js"></script>
+        <script src="../common/main.js"></script>
+        <script src="../common/order.js"></script>
+        <link rel="manifest" href="manifest.json">
+
+        <link rel="import" href="../elements/example-order.html">
+        <link rel="import" href="../elements/order-input.html">
+        <link rel="import" href="../elements/order-split-results-table.html">
+
+        <style>
+            body {
+                background-color: #eaeaea;
+                font-family: 'Arial', sans-serif;
+                font-size: 16px;
+            }
+            .wrapper {
+                display: grid;
+                grid-gap: 10px;
+                /*grid-template-columns: 500px;*/
+                grid-template-columns: repeat(auto-fill, minmax(200px, 550px));
+                justify-content: center;
+            }
+            .left-panel {
+                padding: 30px;
+                background-color: white;
+            }
+            .right-panel {
+                padding: 40px;
+                background-color: #b8232e;
+                color: white;
+            }
+            h1, h3 {
+                margin-top: 0;
+                font-family: 'Arial Black', 'Arial', sans-serif;
+            }
+            .logo-wrapper {
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .logo-wrapper img {
+                width: 70px;
+                height: 70px;
+            }
+            .logo-wrapper h1 {
+                margin-bottom: 0;
+            }
+            .version {
+                opacity: 0.7;
+            }
+            .version:before {
+                content: 'v';
+            }
+            .number {
+                background-color: rgba(0, 0, 0, 0.12);
+                display: inline-block;
+                position: relative;
+                border-radius: 110px;
+                text-align: center;
+                width: 55px;
+                height: 55px;
+                margin-right: 10px;
+            }
+            .number h3 {
+                margin: 0;
+                display: inline;
+                position: relative;
+                top: 5px;
+                font-size: 30px;
+                margin-bottom: 15px;
+            }
+            .step:not(:first-of-type) {
+                margin-bottom: 20px;
+            }
+            .step-text {
+                font-size: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div align="right" id="sha">INSERT_SHA</div>
+        <div align="right">INSERT_BUILD_TIME</div>
+        <script>
+            // this is to help with debugging any SW caching issues if they appear
+            var scriptSha = 'INSERT_SHA';
+            var htmlSha = document.querySelector('#sha').innerText;
+            console.debug(`script version: ${scriptSha}`);
+            console.debug(`html version:   ${htmlSha}`);
+            if (scriptSha !== htmlSha) {
+                alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');
+            }
+            let table = document.querySelector("#table");
+            if(chrome && chrome.storage) {
+                chrome.storage.onChanged.addListener((changes, namespace) => {
+                    if(namespace !== "local") {
+                        return;
+                    }
+                    parseLocalStorage();
+                });
+            }
+            function parseLocalStorage() {
+                chrome.storage.local.get('order', keyValueMap => {
+                    let order = Order.fromJSON(JSON.parse(keyValueMap.order));
+                    table.order = order;
+                });
+            }
+            let notifier = Number(window.localStorage.getItem("notifierToParse"));
+            function requestDom() {
+                notifier = (notifier === notifier ? notifier: 0) + 1;
+                chrome.storage.local.set({notifierToParse: notifier});
+            }
+            requestDom();
+            document.getElementById("parse").addEventListener("click", requestDom);
+        </script>
+        <button id="parse">Parse Dom? Wut?</button>
+        <order-split-results-table id="table"></order-split-results-table>
+    </body>
+</html>
