@@ -113,6 +113,10 @@
                     order: {
                         type: Object,
                         observer: '_onOrderChanged'
+                    },
+                    origin: {
+                        type: String,
+                        value: "https://mergemypullrequest.github.io/order-splitter/"
                     }
                 };
             }
@@ -181,7 +185,13 @@
                 return breakdown;
             }
             _makeUrl(order) {
-                var link = window.location.origin + window.location.pathname;
+                let link;
+                if(this.origin) {
+                    link = this.origin;
+                }
+                else {
+                    link = window.location.origin + window.location.pathname;
+                }
                 if (link.indexOf('index.html') === -1) {
                     link += 'index.html';
                 }

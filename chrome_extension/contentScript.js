@@ -1,16 +1,16 @@
-var port = chrome.runtime.connect();
-sendOrder();
-window.addEventListener('message', e => {
-    if(e.data !== 'parseDom') {
+chrome.storage.onChanged.addListener((changes, namespace) => {
+    if(namespace !== "local") {
         return;
     }
-    sendOrder();
+    if(changes.parseOrderBitch) {
+        sendOrder();
+    }
 });
+sendOrder();
 
 function sendOrder() {
     let order = parseOrderUpDom();
-    order.isHere = true;
-    window.postMessage(order, '*');
+    chrome.storage.local.set({"order": JSON.stringify(order)});
 }
 
 function parseOrderUpDom() {

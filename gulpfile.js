@@ -5,7 +5,6 @@ const copyTheseFilesToDist = [
     './webclient/*.ico',
     './webclient/*.png',
     './common/app-icon/*',
-    './webclient/manifest.json',
     './webclient/sw.js'
 ];
 
@@ -53,12 +52,24 @@ gulp.task('copy-files', ['clean'], function() {
     );
 });
 
-gulp.task('vulcanize', ['clean'], function() {
+gulp.task('copy-files-ext', ['vulcanize-ext', 'clean-ext'], function() {
+    return merge(
+        gulp.src([...orderData, ...dontVulcanizeTheseFiles], {base: './'})
+            .pipe(gulp.dest(extDir)),
+        gulp.src([...copyTheseFilesToDist])
+            .pipe(replace('INSERT_SHA', git.short()))
+            .pipe(debug('copied files'))
+            .pipe(gulp.dest(extDir)),
+        gulp.src(['!./chrome_extension/popup.html', './chrome_extension/*', './common/order.js'])
+            .pipe(gulp.dest(extDir))
+    );
+});
 
+function vulc(src) {
     var jsFilter = filter(['**/*.js'], {restore: true});
     var htmlFilter = filter(['**/*.html'], {restore: true});
 
-    return gulp.src('./webclient/index.html')
+    return gulp.src(src)
         .pipe(vulcanize({
             excludes: dontVulcanizeTheseFiles,
             stripComments: true,
@@ -91,7 +102,16 @@ gulp.task('vulcanize', ['clean'], function() {
 
         .pipe(replace('INSERT_VERSION', version))
         .pipe(replace('INSERT_SHA', git.short()))
-        .pipe(replace('INSERT_BUILD_TIME', new Date().toLocaleString()))
+        .pipe(replace('INSERT_BUILD_TIME', new Date().toLocaleString()));
+}
+
+gulp.task('vulcanize-ext', ['clean-ext'], function() {
+    return vulc('./chrome_extension/popup.html')
+        .pipe(gulp.dest(extDir));
+});
+
+gulp.task('vulcanize', ['clean'], function() {
+    return vulc('./webclient/index.html')
         .pipe(gulp.dest(deployDir));
 });
 
@@ -102,11 +122,7 @@ gulp.task('clean', function () {
 
 const extDir = './ext-dist/';
 
-gulp.task('ext', ['clean-ext', 'default'], function() {
-    return gulp.src([deployDir+'/**', './chrome_extension/*', './common/order.js'])
-        .pipe(debug('extension files'))
-        .pipe(gulp.dest(extDir));
-});
+gulp.task('ext', ['switch-to-src', 'copy-files-ext']);
 
 gulp.task('clean-ext', function() {
     return gulp.src(extDir).pipe(clean());

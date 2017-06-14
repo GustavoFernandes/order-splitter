@@ -31,12 +31,10 @@
         <script src="../bower_components/webcomponentsjs/custom-elements-es5-adapter.js"></script>
         <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
         -->
-        <script src="polyfills.js"></script>
 
         <script src="../common/parsers.js"></script>
         <script src="../common/main.js"></script>
         <script src="../common/order.js"></script>
-        <script src="sw-install.js"></script>
         <link rel="manifest" href="manifest.json">
 
         <link rel="import" href="../elements/example-order.html">
@@ -124,38 +122,30 @@
             if (scriptSha !== htmlSha) {
                 alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');
             }
+            let table = document.querySelector("#table");
+            if(chrome && chrome.storage) {
+                chrome.storage.onChanged.addListener((changes, namespace) => {
+                    if(namespace !== "local") {
+                        return;
+                    }
+                    parseLocalStorage();
+                });
+            }
+            function parseLocalStorage() {
+                chrome.storage.local.get('order', keyValueMap => {
+                    let order = Order.fromJSON(JSON.parse(keyValueMap.order));
+                    table.order = order;
+                });
+            }
+            let notifier = Number(window.localStorage.getItem("notifierToParse"));
+            function requestDom() {
+                notifier = (notifier === notifier ? notifier: 0) + 1;
+                chrome.storage.local.set({notifierToParse: notifier});
+            }
+            requestDom();
+            document.getElementById("parse").addEventListener("click", requestDom);
         </script>
-        <div class="wrapper">
-            <div class="left-panel">
-                <div class="logo-wrapper">
-                    <img src="images/ordersplitter-logo.png" alt="Order Splitter">
-                    <h1>Order Splitter</h1>
-                    <span class="version">INSERT_VERSION</span>
-                </div>
-                <order-input></order-input>
-            </div>
-            <div class="right-panel">
-                <div class="step">
-                    <h1>How it Works</h1>
-                    <span class="number"><h3>1</h3></span>
-                    <span class="step-text">Copy order details from OrderUp</span>
-                </div>
-                <div>
-                    <pre>
-                        <example-order></example-order>
-                    </pre>
-                </div>
-                <div class="step">
-                    <span class="number"><h3>2</h3></span>
-                    <span class="step-text">Enter taxes, fees, and tip</span>
-                </div>
-                <div class="step">
-                    <span class="number"><h3>3</h3></span>
-                    <span class="step-text">Split order</span>
-                </div>
-            </div>
-        </div>
-        <p id="result"></p>
+        <button id="parse">Parse Dom? Wut?</button>
         <order-split-results-table id="table"></order-split-results-table>
     </body>
 </html>

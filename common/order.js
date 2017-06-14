@@ -106,7 +106,7 @@ class Order {
     toJSON() {
         let ret = {};
         ret.people = Array.from(this.people);
-        ret.tip = this.tip;
+        ret.tipDollars = this.tipDollars;
         ret.tax = this.tax;
         ret.nonTaxedFees = this.nonTaxedFees;
         ret.taxedFees = this.taxedFees;
@@ -118,7 +118,7 @@ class Order {
     static fromJSON(json) {
         let order = new Order();
         order.people = new Map(json.people);
-        order.withTip(json.tip, json.isTipPercentage)
+        order.withTip(json.tipDollars, false)
             .withTax(json.tax)
             .withNonTaxedFees(json.nonTaxedFees)
             .withTaxedFees(json.taxedFees);
