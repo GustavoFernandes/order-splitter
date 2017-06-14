@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../bower_components/iron-location/iron-location.html">
 
 <dom-module id="order-split-results-table">
     <template hidden>
@@ -23,6 +24,10 @@
                 <tr>
                     <td style="font-weight:bold;">Everyone</td>
                     <td>
+                        <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
+                        =
+                    </td>
+                    <td>
                         <span class="chip">$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span>
                     </td>
                     <td>
@@ -37,14 +42,14 @@
                         +
                         <span class="chip">$[[_prettifyNumber(order.tipDollars)]] tip</span>
                     </td>
-                    <td>
-                        =
-                        <span class="chip">$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span>
-                    </td>
                 </tr>
                 <template is="dom-repeat" items="[[_computeBreakdownItems(order.people)]]">
                     <tr>
                         <td>[[item.name]]</td>
+                        <td>
+                            <span class="chip">$[[_computePersonTotal(item.name)]]</span>
+                            =
+                        </td>
                         <td>
                             <span class="chip">$[[item.price]] price</span>
                         </td>
@@ -60,16 +65,16 @@
                             +
                             <span class="chip">$[[_multiply(item.price, order.tipPercent)]] tip <paper-tooltip>[[item.price]] x [[order.tipPercent]]</paper-tooltip></span>
                         </td>
-                        <td>
-                            =
-                            <span class="chip">$[[_computePersonTotal(item.name)]]</span>
-                        </td>
                     </tr>
                 </template>
             </table>
             <paper-button on-tap="_onClipboardTap">Copy to Clipboard</paper-button>
             <a href="[[_makeUrl(order)]]">link</a>
             <textarea id="textForClipboard" value="[[_makeTextForClipboard(order.totals)]]" hidden></textarea>
+
+            <iron-location 
+                on-query-changed="_handleQueryStringChanged">
+            </iron-location>
         </div>
     </template>
     <script>
@@ -98,17 +103,11 @@
             _multiply(a, b) {
                 return this._prettifyNumber(a * b);
             }
-            ready() {
-                super.ready();
-                this.hidden = true; // hide until order property is set
-
-                var element = this;
-                window.OrderSplitResults = {
-                    show(order) {
-                        element.order = order;
-                    }
-                };
+            constructor() {
+                super();
+                this.hidden = true;
             }
+
             static get properties() {
                 return {
                     order: {
@@ -132,20 +131,7 @@
              * @returns {string} A string of a number rounded and padded to 2 decimal places
              */
             _prettifyNumber(n) {
-                n = Math.round(n * 100) / 100; // round to 2 decimal places
-
-              // pad to 2 decimal places if necessary
-                var s = n.toString();
-
-                if (s.indexOf('.') === -1) {
-                    s += '.';
-                }
-
-                while (s.length < s.indexOf('.') + 3) {
-                    s += '0';
-                }
-
-                return s;
+                return Utils._prettifyNumber(n);
             }
             /**
              * Returns a listing of names to split costs
@@ -207,6 +193,9 @@
                 }
 
                 return link;
+            }
+            _handleQueryStringChanged(e, {value}) {
+                this.order = new QueryStringParser().parse(value).split();
             }
 
         });

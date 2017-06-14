@@ -46,6 +46,9 @@ class Order {
     }
 
     get taxPercent() {
+        if(this.subTotal === 0) {
+            return 0;
+        }
         return this.tax/this.subTotal;
     }
 
@@ -60,6 +63,9 @@ class Order {
     get tipPercent() {
         if(this.isTipPercentage) {
             return this._tipPercentage;
+        }
+        if(this.subTotal === 0) {
+            return 0;
         }
         return this._tipDollars / this.subTotal;
     }

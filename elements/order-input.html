@@ -2,6 +2,7 @@
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/iron-location/iron-location.html">
 <dom-module id="order-input">
     <template>
         <style>
@@ -46,6 +47,7 @@
             </div>
             <paper-button id="split" on-tap="_onSplitButtonTap">Split</paper-button>
         </div>
+        <iron-location id="location"></iron-location>
     </template>
     <script>
         defineCustomElement('order-input', class extends Polymer.Element {
@@ -74,7 +76,15 @@
                     console.log('trying csv parser');
                     order =  new CsvParser().parse(text).split();
                 }
-                OrderSplitResults.show(order);
+                this._changeUrl(order);
+            }
+            _changeUrl(order) {
+                let query = 'tax=' + order.tax + '&fee=' + order.fee + '&tip=' + order.tipDollars;
+
+                for (var [person, val] of order.people) {
+                    query += '&' + encodeURIComponent(person) + '=' + Utils._prettifyNumber(val);
+                }
+                this.$.location.query = query;
             }
             _onCheckboxTap() {
                 localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
